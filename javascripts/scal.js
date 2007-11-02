@@ -1,4 +1,4 @@
-Object.extend(Date.prototype, {
+﻿Object.extend(Date.prototype, {
     monthnames: ['January','February','March','April','May','June','July','August','September','October','November','December'],
     daynames: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
     succ: function(){
