@@ -41,12 +41,7 @@ scal.prototype = {
         var type = Try.these(
             function(){ if(!Object.isUndefined(Effect)) { return 'Effect'; }},
             function(){ return 'Element'; }
-        ); 
-        var planner = Try.these(
-            function(){ if(!Object.isUndefined(scalplanner)) { return 'planneron'; }},
-            function(){ return 'planneroff'; }
-        ); 
-        this.planner = Prototype.emptyFunction;
+        );  
         this.startdate = new Date();
 		this.startdate.setHours(0,0,0,0);
         this.options = Object.extend({
@@ -68,9 +63,7 @@ scal.prototype = {
         if(this.options.month != 0 && Object.isNumber(this.options.month)) { this.startdate.setMonth(this.options.month); }
         if(this.options.day != 1 && Object.isNumber(this.options.month)) { this.startdate.setDate(this.options.day); }
         if(this.options.year != this.startdate.getFullYear() && Object.isNumber(this.options.month)) { this.startdate.setYear(this.options.year); }
-        if(this.options.planner && planner != 'planneroff') {
-            this.planner = new scalplanner(this);
-        }
+        if(this.options.planner) { this.planner = this._setupPlanner(this.options.planner); }
 		this.updateelement = update;
 		this._setCurrentDate(this.startdate); 
         this.initDate = new Date(this.currentdate);
@@ -168,7 +161,7 @@ scal.prototype = {
 		var cell = new Element('div',{'class':cellid});
 		var celldate = new Element('div',{'class':cellid+'_date'}).addClassName('dayboxdate').update(day.getDate());
 		var cellvalue = new Element('div',{'class':cellid+'_value'}).addClassName('dayboxvalue');
-        this.planner._update(day,cellvalue);
+        if(this.options.planner) { this._updatePlanner(day,cellvalue); }
         cell.insert(celldate).insert(cellvalue).addClassName('daybox').addClassName('daybox'+ day.format('dddd').toLowerCase());
 		// if we are on the currently selected date, set the class to dayselected (i.e. highlight it).
         if(this._compareDates(day,this.currentdate,'dayselected')) {
@@ -248,12 +241,15 @@ scal.prototype = {
     toggleCalendar: function(){
         this.options[this.element.visible() ? 'closeeffect' : 'openeffect'](this.element);
     },
+/*------------------------------- PLANNER PLACEHOLDERS -------------------------------*/            
+    _setupPlanner: Prototype.emptyFunction,
+    _updatePlanner: Prototype.emptyFunction,
 /*------------------------------- DEPRECATED -------------------------------*/            
     openCalendar: function(){ 
         if(!this.isOpen()){ this.toggleCalendar(); }
     },
     closeCalendar: function(){ 
-        if(!this.isOpen()){ this.toggleCalendar(); }
+        if(this.isOpen()){ this.toggleCalendar(); }
     },
     isOpen: function(){ 
         return this.element.visible();
