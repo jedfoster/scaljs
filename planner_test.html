@@ -4,26 +4,50 @@
 	<link rel="stylesheet" href="styles/stylemain.css" type="text/css" media="screen"/>
 	<link rel="stylesheet" href="styles/scal.css" type="text/css" media="screen"/>
 	<script src="javascripts/prototype.js" type="text/javascript"></script>
-	<script src="javascripts/scriptaculous.js" type="text/javascript"></script>
+	<script src="javascripts/effects.js" type="text/javascript"></script>
 	<script src="javascripts/scal.js" type="text/javascript"></script>
 	<script src="javascripts/scalplanner.js" type="text/javascript"></script>
 	
 	<title>Scal Planner Tester - Functional testing of scal planner</title>
 
 </head>
+<style type="text/css">
+ p.celebration {
+    background: yellow;
+ }
+ p.reminders {
+    background: #ED0008;
+    color: #fff;
+ }
+ p.dragons, p.pepperfest {
+    background: green;
+    color: #fff;
+ }
+ p.dragonremove {
+    background: #000;
+    color: #fff;
+ }
+</style>
 <script>
 <!--
-var myplanner = $H({
-    'December 17, 2007' : ["Mom's Birthday", "Julie's Birthday"],
-    'November 10, 2007' : ['renew license','pickup mom']
-});
+
+var myplanner = [
+    { period: 'December 17, 2007', label: ["Mom's Birthday", "Julie's Birthday"], cls: 'celebration'},
+    { period: 'November 10, 2007', label: ['renew license','pickup mom'], cls: 'reminders'},
+    { period: $A($R(new Date('November 5, 2007'),new Date('November 9, 2007'))), label: ['dragon days'], cls: 'dragons'} 
+];
+
 
 var samplecal;
 	function showcalendars(){
 		//samplecal = new scal('samplecal','samplecal_value',{year:2007,month:8,day:3,titleformat:'mmmm yyyy',closebutton:'X',dayheadlength:2});
         samplecal = new scal('samplecal',updateyear,{titleformat:'mmmm yyyy',closebutton:'X',dayheadlength:2,weekdaystart:0,planner: myplanner});
-        samplecal.planner.setPlannerValue(2007,11,28,"Here be dragons!");
-        samplecal.planner.updateDayValue(1,1, "More dragons!");
+        var cell = samplecal.setPlannerValue(2007,11,28,"Here be dragons!");
+        new Effect.Highlight(cell);
+        samplecal.setPlannerValue(2007,11,29,"Remove dragons!", 'dragonremove');
+        cell = samplecal.updateDayValue(1,1, "More dragons!");
+        new Effect.Highlight(cell);
+        samplecal.updateDayValue(2,1, "Pepper Fest!", 'pepperfest');
 	}
 
 	function changestyle(event){
