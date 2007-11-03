@@ -122,84 +122,86 @@ var samplecal;
             -->
             <div class="calbutton" onclick="samplecal.toggleCalendar();" style="float:left;">Close Calendar</div>
             <div class="calbutton" onclick="samplecal.toggleCalendar();" style="margin-left:150px;clear:right;">Open Calendar</div>
-            <form id="build" name="build" style="display: block; float: right; width: 300px;" onsubmit="buidcalendar(this); return false;">
-                <fieldset>
-                    <legend>
-                        Build Your Own
-                    </legend>
-                    <label class="first" for="titleformat">
-                        Title Format
-                        <input id="titleformat" name="titleformat" type="text" value="mmmm yyyy" />
-                    </label>
-                    <label for="closebutton">
-                        Close Button
-                        <input id="closebutton" name="closebutton" type="text" value="X" />
-                    </label>
-                    <label for="prevbutton">
-                        Previous Button
-                        <input id="prevbutton" name="prevbutton" type="text" value="&amp;laquo;" />
-                    </label>
-                    <label for="nextbutton">
-                        Next Button
-                        <input id="nextbutton" name="nextbutton" type="text" value="&amp;raquo;" />
-                    </label>
-                    <label for="dayheadlength">
-                        Day Head Length
-                        <input id="dayheadlength" name="dayheadlength" type="text" value="2" />
-                    </label>
-                    <label for="weekdaystart">
-                        Weekday Start
-                        <input id="weekdaystart" name="weekdaystart" type="text" value="0" />
-                    </label>
-                    <label for="day">
-                        Start Day
-                        <input id="day" name="day" type="text" value="1" />
-                    </label>
-                    <label for="month">
-                        Start Month
-                        <input id="month" name="month" type="text" value="1" />
-                    </label>
-                    <label for="year">
-                        Start Year
-                        <input id="year" name="year" type="text" value="" />
-                    </label>
-                    <label for="exactweeks">
-                        Exact Weeks
-                        <input style="width: 20px;" id="exactweeks" name="exactweeks" type="checkbox" />
-                    </label>
-
-                    <input type="submit" value="Build It" />
-                </fieldset>
-            </form>
-            <form id="switch" name="switch" style="display: block; float: right; width: 300px;" onsubmit="switchcalendar(this); return false;">
-                <fieldset>
-                    <legend>Switch Date</legend>
-                    <label for="switchday">
-                        Day
-                        <input id="switchday" name="switchday" type="text" value="" />
-                    </label>
-                    <label for="switchmonth">
-                        Month
-                        <input id="switchmonth" name="switchmonth" type="text" value="" />
-                    </label>
-                    <label for="switchyear">
-                        Year
-                        <input id="switchyear" name="switchyear" type="text" value="" />
-                    </label>
-                    <label for="switchstring">
-                        Or pick one from the list:
-					<select id="switchstring" name="switchstring" onchange="samplecal.setCurrentDate($F('switchstring')); return false;">
-						<option>init</option>
-						<option>up</option>
-						<option>down</option>
-					</select>
-                    </label>
-                    <input type="submit" value="Switch It" />
-                </fieldset>
-            </form>            
             <div id="samplecal" class="scal"></div>
             <div id="samplecal_value" class="featured">&nbsp;</div>
         </div>
     </div>
+	<div id="builderforms">
+        <form id="build" name="build" style="display: block; float: left; width: 300px;" onsubmit="buidcalendar(this); return false;">
+            <fieldset>
+                <legend>
+                    Build Your Own
+                </legend>
+                <label class="first" for="titleformat">
+                    Title Format
+                    <input id="titleformat" name="titleformat" type="text" value="mmmm yyyy" />
+                </label>
+                <label for="closebutton">
+                    Close Button
+                    <input id="closebutton" name="closebutton" type="text" value="X" />
+                </label>
+                <label for="prevbutton">
+                    Previous Button
+                    <input id="prevbutton" name="prevbutton" type="text" value="&amp;laquo;" />
+                </label>
+                <label for="nextbutton">
+                    Next Button
+                    <input id="nextbutton" name="nextbutton" type="text" value="&amp;raquo;" />
+                </label>
+                <label for="dayheadlength">
+                    Day Head Length
+                    <input id="dayheadlength" name="dayheadlength" type="text" value="2" />
+                </label>
+                <label for="weekdaystart">
+                    Weekday Start
+                    <input id="weekdaystart" name="weekdaystart" type="text" value="0" />
+                </label>
+                <label for="day">
+                    Start Day
+                    <input id="day" name="day" type="text" value="1" />
+                </label>
+                <label for="month">
+                    Start Month
+                    <input id="month" name="month" type="text" value="1" />
+                </label>
+                <label for="year">
+                    Start Year
+                    <input id="year" name="year" type="text" value="" />
+                </label>
+                <label for="exactweeks">
+                    Exact Weeks
+                    <input style="width: 20px;" id="exactweeks" name="exactweeks" type="checkbox" />
+                </label>
+
+                <input type="submit" value="Build It" />
+            </fieldset>
+        </form>
+        <form id="switch" name="switch" style="display: block; float: left; width: 300px;" onsubmit="switchcalendar(this); return false;">
+            <fieldset>
+                <legend>Switch Date</legend>
+                <label for="switchday">
+                    Day
+                    <input id="switchday" name="switchday" type="text" value="" />
+                </label>
+                <label for="switchmonth">
+                    Month
+                    <input id="switchmonth" name="switchmonth" type="text" value="" />
+                </label>
+                <label for="switchyear">
+                    Year
+                    <input id="switchyear" name="switchyear" type="text" value="" />
+                </label>
+                <label for="switchstring">
+                    Or pick one from the list:
+				<select id="switchstring" name="switchstring" onchange="samplecal.setCurrentDate($F('switchstring')); return false;">
+					<option>init</option>
+					<option>up</option>
+					<option>down</option>
+				</select>
+                </label>
+                <input type="submit" value="Switch It" />
+            </fieldset>
+        </form>            
+	</div>
 </body>
 </html>
