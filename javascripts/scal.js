@@ -106,7 +106,11 @@ scal.prototype = {
 	_buildHead: function() {
 		var cal_wrapper = new Element('div',{'class':'cal_wrapper'});
 		var weekbox = new Element('div',{'class':'weekbox weekboxname'});
-        Date.prototype.daynames.each(function(day,i) {
+        $A(Date.prototype.daynames.sortBy(function(s,i){
+				i+=this.options.weekdaystart;
+				if(i>6){i-=7;}
+				return i;
+			}.bind(this))).each(function(day,i) {
          	var cell = new Element('div',{'class':'cal_day_name_'+ i});
 			cell.addClassName('daybox').addClassName('dayboxname').update(day.substr(0,this.options.dayheadlength));
             if(i == 6) { cell.addClassName('endweek'); }
