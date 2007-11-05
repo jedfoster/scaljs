@@ -1,4 +1,4 @@
-﻿Object.extend(Date.prototype, {
+Object.extend(Date.prototype, {
     monthnames: ['January','February','March','April','May','June','July','August','September','October','November','December'],
     daynames: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
     succ: function(){
@@ -106,11 +106,11 @@ scal.prototype = {
 	_buildHead: function() {
 		var cal_wrapper = new Element('div',{'class':'cal_wrapper'});
 		var weekbox = new Element('div',{'class':'weekbox weekboxname'});
-        $A(Date.prototype.daynames.sortBy(function(s,i){
+        Date.prototype.daynames.sortBy(function(s,i){
 				i+=this.options.weekdaystart;
 				if(i>6){i-=7;}
 				return i;
-			}.bind(this))).each(function(day,i) {
+			}.bind(this)).each(function(day,i) {
          	var cell = new Element('div',{'class':'cal_day_name_'+ i});
 			cell.addClassName('daybox').addClassName('dayboxname').update(day.substr(0,this.options.dayheadlength));
             if(i == 6) { cell.addClassName('endweek'); }
@@ -144,15 +144,19 @@ scal.prototype = {
         });
         if(!this.options.exactweeks) {
             var toFinish = 42 - this.cells.size(); 
-            wk += 1;
-            row = new Element('div',{'class':'cal_week_' + wk}).addClassName('weekbox'); 
-            $R(1,toFinish).each(function(i) {
-                var d = lastday.succ();
-                var cell = this._buildDay(wk, d);
-                row.insert(cell);
-                cal_weeks_wrapper.insert(row);
-                lastday = d;
-            }.bind(this));
+			var wkstoFinish = Math.ceil(toFinish / 7);
+			if(wkstoFinish > 0) { toFinish = toFinish / wkstoFinish; }
+			$R(1,wkstoFinish).each(function(w){
+	            wk += 1;
+    	        row = new Element('div',{'class':'cal_week_' + wk}).addClassName('weekbox'); 
+        	    $R(1,toFinish).each(function(i) {
+            	    var d = lastday.succ();
+                	var cell = this._buildDay(wk, d);
+	                row.insert(cell);
+					cal_weeks_wrapper.insert(row);
+        	        lastday = d;
+            	}.bind(this));
+			}.bind(this));
         }
         return cal_weeks_wrapper;
     },
