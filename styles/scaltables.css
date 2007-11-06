@@ -1,3 +1,10 @@
+/* scaltables.css
+
+__DO NOT USE scal.css and scaltables.css TOGETHER__
+
+If you plan to use tables (tabular) with scal, use this stylesheet instead of scal.css
+*/
+
 .scal table {border-collapse: collapse;}
 
 .scal table.cal_table {
