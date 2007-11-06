@@ -55,20 +55,29 @@ scal.prototype = {
           dayheadlength: 2,
           weekdaystart: 0,
           planner: false,
+          tabular: false,
           year: this.startdate.getFullYear(),
           month: 1,
           day: 1
         }, arguments[2] || { });   
         --this.options.month;
+        this.table = false;
+        this.thead = false;
         if(this.options.month != 0 && Object.isNumber(this.options.month)) { this.startdate.setMonth(this.options.month); }
         if(this.options.day != 1 && Object.isNumber(this.options.month)) { this.startdate.setDate(this.options.day); }
         if(this.options.year != this.startdate.getFullYear() && Object.isNumber(this.options.month)) { this.startdate.setYear(this.options.year); }
         if(this.options.planner) { this.planner = this._setupPlanner(this.options.planner); }
+        if(this.options.tabular) { 
+            this.table = new Element('table',{'class': 'cal_table',border: 0,cellspacing: 0,cellpadding: 0});
+            this.thead = new Element('thead');
+            this.table.insert(this.thead);
+            this.element.insert(this.table);
+        }
 		this.updateelement = update;
 		this._setCurrentDate(this.startdate); 
         this.initDate = new Date(this.currentdate);
         this.controls = this._buildControls();
-        this.element.insert(this.controls);
+        this[this.table ? 'thead' : 'element'].insert(this.controls);
 		this.cal_wrapper = this._buildHead();
 		this.cells = [];
         this._buildCal();
@@ -83,10 +92,23 @@ scal.prototype = {
     },
     _buildCal: function() {
         this._emptyCells();
-        if(!Object.isUndefined(this.cal_weeks_wrapper)) { this.cal_weeks_wrapper.remove(); }
+        if(!(Object.isUndefined(this.cal_weeks_wrapper) || this.table)) { this.cal_weeks_wrapper.remove(); }
         this.cal_weeks_wrapper = this._buildWrapper();
-		this.cal_wrapper.insert(this.cal_weeks_wrapper);
-        this.element.insert(this.cal_wrapper);
+		if(this.table) {
+			var rows = this.table.select('tbody tr.weekbox');
+			if(rows) { 
+				rows.shift();	
+				rows.invoke('remove');
+			}
+			var body = this.table.select('tbody')[0];
+			if(body) { body.remove(); }
+			this.cal_weeks_wrapper.each(function(row){
+				this.cal_wrapper.insert(row);
+			}.bind(this));
+		} else {
+	    	this.cal_wrapper.insert(this.cal_weeks_wrapper);
+		}
+        this[this.table ? 'table' : 'element'].insert(this.cal_wrapper);
     },
     _click: function(event,cellIndex) {
         this.element.select('.dayselected').invoke('removeClassName', 'dayselected');
@@ -104,14 +126,14 @@ scal.prototype = {
 		};		
 	},    
 	_buildHead: function() {
-		var cal_wrapper = new Element('div',{'class':'cal_wrapper'});
-		var weekbox = new Element('div',{'class':'weekbox weekboxname'});
+		var cal_wrapper = new Element(this.table ? 'tbody' : 'div',{'class':'cal_wrapper'});
+		var weekbox = new Element(this.table ? 'tr' : 'div',{'class':'weekbox weekboxname'});
         Date.prototype.daynames.sortBy(function(s,i){
 				i+=this.options.weekdaystart;
 				if(i>6){i-=7;}
 				return i;
 			}.bind(this)).each(function(day,i) {
-         	var cell = new Element('div',{'class':'cal_day_name_'+ i});
+         	var cell = new Element(this.table ? 'td' : 'div',{'class':'cal_day_name_'+ i});
 			cell.addClassName('daybox').addClassName('dayboxname').update(day.substr(0,this.options.dayheadlength));
             if(i == 6) { cell.addClassName('endweek'); }
 			weekbox.insert(cell);
@@ -123,7 +145,7 @@ scal.prototype = {
 		var lastdaycal = new Date(this.lastofmonth.getFullYear(),this.lastofmonth.getMonth(),this.lastofmonth.getDate());
 		firstdaycal.setDate(firstdaycal.getDate() - firstdaycal.getDay() + this.options.weekdaystart);
         var dateRange = $A($R(firstdaycal,lastdaycal));
-		var cal_weeks_wrapper = new Element('div',{'class': 'calweekswrapper'});
+		var cal_weeks_wrapper = this.table ? [] : new Element('div',{'class': 'calweekswrapper'});
         var wk;
         var row;
         var lastday;
@@ -135,29 +157,29 @@ scal.prototype = {
         }.bind(this);       
         dateRange.eachSlice(7, function(slice,i) {
             wk = i;
-            row = new Element('div',{'class':'cal_week_' + wk}).addClassName('weekbox');
+            row = new Element(this.table ? 'tr' : 'div',{'class':'cal_week_' + wk}).addClassName('weekbox');
             while(slice.length < 7) { 
                 slice.push(slice.last().succ());
             }
-            slice.map(buildWeek);
-            cal_weeks_wrapper.insert(row);
-        });
+            slice.map(buildWeek);	
+			cal_weeks_wrapper[this.table ? 'push' : 'insert'](row);
+        }.bind(this));
         if(!this.options.exactweeks) {
             var toFinish = 42 - this.cells.size(); 
 			var wkstoFinish = Math.ceil(toFinish / 7);
 			if(wkstoFinish > 0) { toFinish = toFinish / wkstoFinish; }
 			$R(1,wkstoFinish).each(function(w){
 	            wk += 1;
-    	        row = new Element('div',{'class':'cal_week_' + wk}).addClassName('weekbox'); 
+    	        row = new Element(this.table ? 'tr' : 'div',{'class':'cal_week_' + wk}).addClassName('weekbox'); 
         	    $R(1,toFinish).each(function(i) {
             	    var d = lastday.succ();
                 	var cell = this._buildDay(wk, d);
 	                row.insert(cell);
-					cal_weeks_wrapper.insert(row);
+					cal_weeks_wrapper[this.table ? 'push' : 'insert'](row);
         	        lastday = d;
             	}.bind(this));
 			}.bind(this));
-        }
+        }	
         return cal_weeks_wrapper;
     },
     _compareDates: function(date1,date2,type){
@@ -166,7 +188,7 @@ scal.prototype = {
     _buildDay: function(week,day){
         this.dateRange.push(day);
         var cellid = 'cal_day_' + week + '_' + day.getDay();
-		var cell = new Element('div',{'class':cellid});
+		var cell = new Element(this.table ? 'td' : 'div',{'class':cellid});
 		var celldate = new Element('div',{'class':cellid+'_date'}).addClassName('dayboxdate').update(day.getDate());
 		var cellvalue = new Element('div',{'class':cellid+'_value'}).addClassName('dayboxvalue');
         if(this.options.planner) { this._updatePlanner(day,cellvalue); }
@@ -195,11 +217,13 @@ scal.prototype = {
             {p: 'calnextmonth', u: this.options.nextbutton, f: this._switchMonth.bindAsEventListener(this,'up')},
             {p: 'caltitle', u: this.currentdate.format(this.options.titleformat), f: this._switchMonth.bindAsEventListener(this,'init')}
         ];
-        var cal_header = new Element('div',{'class':'calheader'});
+        if(this.table) { hParts = [hParts[1],hParts[3],hParts[2],hParts[0]]; }
+        var cal_header = new Element(this.table ? 'tr' : 'div',{'class':'calheader'});
         hParts.each(function(part) {
-            var el = new Element('div',{'class': part.p});
+            var el = new Element(this.table ? 'td' : 'div',{'class': part.p});
             if(part.p == 'caltitle') {
                 this.title = el;
+                if(this.table) { el.writeAttribute({colspan: 4}); }
                 el.update(part.u).observe('click',part.f);
             } else {
     		    el.addClassName('calcontrol');
@@ -232,6 +256,7 @@ scal.prototype = {
     destroy: function(){
         this._emptyCells();
         if(!Object.isUndefined(this.cal_weeks_wrapper)) { this.cal_weeks_wrapper.remove(); }
+        if(this.table) { this.element.select('.cal_table').invoke('remove'); }
         this.element.select('.caltitle').invoke('stopObserving');
         this.element.select('.calcontrol').invoke('stopObserving');
         this.cal_wrapper.remove();
