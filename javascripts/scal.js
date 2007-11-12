@@ -2,34 +2,34 @@ Object.extend(Date.prototype, {
     monthnames: ['January','February','March','April','May','June','July','August','September','October','November','December'],
     daynames: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
     succ: function(){
-		var sd = new Date(this.getFullYear(),this.getMonth(),this.getDate()+1);
-		sd.setHours(this.getHours(),this.getMinutes(),this.getSeconds(),this.getMilliseconds());
-		return sd;
+        var sd = new Date(this.getFullYear(),this.getMonth(),this.getDate()+1);
+        sd.setHours(this.getHours(),this.getMinutes(),this.getSeconds(),this.getMilliseconds());
+        return sd;
     },
     firstofmonth: function(){
-		return new Date(this.getFullYear(),this.getMonth(),1);
+        return new Date(this.getFullYear(),this.getMonth(),1);
     },
     lastofmonth: function(){
-		return new Date(this.getFullYear(),this.getMonth()+1,0);
+        return new Date(this.getFullYear(),this.getMonth()+1,0);
     },
     format: function(f){
-	    if (!this.valueOf()) { return '&nbsp;'; }
-	    var d = this;
+        if (!this.valueOf()) { return '&nbsp;'; }
+        var d = this;
         var formats = {
             'yyyy' : d.getFullYear(),
             'mmmm': this.monthnames[d.getMonth()],
-	        'mmm':  this.monthnames[d.getMonth()].substr(0, 3),
-	        'mm':   d.getMonth() + 1,
-	        'dddd': this.daynames[d.getDay()],
-	        'ddd':  this.daynames[d.getDay()].substr(0, 3),
-	        'dd':   d.getDate(),
-	        'hh':   h = d.getHours() % 12 ? h : 12,
-	        'nn':   d.getMinutes(),
-	        'ss':   d.getSeconds(),
-	        'a/p':  d.getHours() < 12 ? 'a' : 'p'
+            'mmm':  this.monthnames[d.getMonth()].substr(0, 3),
+            'mm':   d.getMonth() + 1,
+            'dddd': this.daynames[d.getDay()],
+            'ddd':  this.daynames[d.getDay()].substr(0, 3),
+            'dd':   d.getDate(),
+            'hh':   h = d.getHours() % 12 ? h : 12,
+            'nn':   d.getMinutes(),
+            'ss':   d.getSeconds(),
+            'a/p':  d.getHours() < 12 ? 'a' : 'p'
         };
         return f.gsub(/(yyyy|mmmm|mmm|mm|dddd|ddd|dd|hh|nn|ss|a\/p)/i,
-	        function(match) { return formats[match[0].toLowerCase()]; });
+            function(match) { return formats[match[0].toLowerCase()]; });
     }
 });
 
@@ -43,7 +43,7 @@ scal.prototype = {
             function(){ return 'Element'; }
         );  
         this.startdate = new Date();
-		this.startdate.setHours(0,0,0,0);
+        this.startdate.setHours(0,0,0,0);
         this.options = Object.extend({
           titleformat: 'mmmm yyyy',
           closebutton: 'X',
@@ -73,18 +73,18 @@ scal.prototype = {
             this.table.insert(this.thead);
             this.element.insert(this.table);
         }
-		this.updateelement = update;
-		this._setCurrentDate(this.startdate); 
+        this.updateelement = update;
+        this._setCurrentDate(this.startdate); 
         this.initDate = new Date(this.currentdate);
         this.controls = this._buildControls();
         this[this.table ? 'thead' : 'element'].insert(this.controls);
-		this.cal_wrapper = this._buildHead();
-		this.cells = [];
+        this.cal_wrapper = this._buildHead();
+        this.cells = [];
         this._buildCal();
     },
 /*------------------------------- INTERNAL -------------------------------*/    
     _emptyCells: function() {
-		if(this.cells.size() > 0) { 
+        if(this.cells.size() > 0) { 
             this.cells.invoke('stopObserving'); 
             this.cells.invoke('remove');
             this.cells = [];
@@ -94,20 +94,20 @@ scal.prototype = {
         this._emptyCells();
         if(!(Object.isUndefined(this.cal_weeks_wrapper) || this.table)) { this.cal_weeks_wrapper.remove(); }
         this.cal_weeks_wrapper = this._buildWrapper();
-		if(this.table) {
-			var rows = this.table.select('tbody tr.weekbox');
-			if(rows) { 
-				rows.shift();	
-				rows.invoke('remove');
-			}
-			var body = this.table.select('tbody')[0];
-			if(body) { body.remove(); }
-			this.cal_weeks_wrapper.each(function(row){
-				this.cal_wrapper.insert(row);
-			}.bind(this));
-		} else {
-	    	this.cal_wrapper.insert(this.cal_weeks_wrapper);
-		}
+        if(this.table) {
+            var rows = this.table.select('tbody tr.weekbox');
+            if(rows) { 
+                rows.shift();	
+                rows.invoke('remove');
+            }
+            var body = this.table.select('tbody')[0];
+            if(body) { body.remove(); }
+            this.cal_weeks_wrapper.each(function(row){
+                this.cal_wrapper.insert(row);
+            }.bind(this));
+        } else {
+            this.cal_wrapper.insert(this.cal_weeks_wrapper);
+        }
         this[this.table ? 'table' : 'element'].insert(this.cal_wrapper);
     },
     _click: function(event,cellIndex) {
@@ -117,35 +117,35 @@ scal.prototype = {
         this._setCurrentDate(this.dateRange[cellIndex]);
         this._updateExternal(event);
     },
-	_updateExternal: function(event){		
-		if (Object.isString(this.updateelement)){
-			// update the defined update element with the currently selected date
-			$(this.updateelement).update(event);
-		}else if (Object.isFunction(this.updateelement)){
-			this.updateelement(event);
-		};		
-	},    
-	_buildHead: function() {
-		var cal_wrapper = new Element(this.table ? 'tbody' : 'div',{'class':'cal_wrapper'});
-		var weekbox = new Element(this.table ? 'tr' : 'div',{'class':'weekbox weekboxname'});
+    _updateExternal: function(event){		
+        if (Object.isString(this.updateelement)){
+            // update the defined update element with the currently selected date
+            $(this.updateelement).update(event);
+        }else if (Object.isFunction(this.updateelement)){
+            this.updateelement(event);
+        };		
+    },    
+    _buildHead: function() {
+        var cal_wrapper = new Element(this.table ? 'tbody' : 'div',{'class':'cal_wrapper'});
+        var weekbox = new Element(this.table ? 'tr' : 'div',{'class':'weekbox weekboxname'});
         Date.prototype.daynames.sortBy(function(s,i){
-				i+=this.options.weekdaystart;
-				if(i>6){i-=7;}
-				return i;
-			}.bind(this)).each(function(day,i) {
-         	var cell = new Element(this.table ? 'td' : 'div',{'class':'cal_day_name_'+ i});
-			cell.addClassName('daybox').addClassName('dayboxname').update(day.substr(0,this.options.dayheadlength));
-            if(i == 6) { cell.addClassName('endweek'); }
-			weekbox.insert(cell);
+            i+=this.options.weekdaystart;
+            if(i>6){i-=7;}
+            return i;
+        }.bind(this)).each(function(day,i) {
+        var cell = new Element(this.table ? 'td' : 'div',{'class':'cal_day_name_'+ i});
+        cell.addClassName('daybox').addClassName('dayboxname').update(day.substr(0,this.options.dayheadlength));
+        if(i == 6) { cell.addClassName('endweek'); }
+        weekbox.insert(cell);
         }.bind(this));
         return cal_wrapper.insert(weekbox);
-	},
+    },
     _buildWrapper: function() {
-		var firstdaycal = new Date(this.firstofmonth.getFullYear(),this.firstofmonth.getMonth(),this.firstofmonth.getDate());
-		var lastdaycal = new Date(this.lastofmonth.getFullYear(),this.lastofmonth.getMonth(),this.lastofmonth.getDate());
-		firstdaycal.setDate(firstdaycal.getDate() - firstdaycal.getDay() + this.options.weekdaystart);
+        var firstdaycal = new Date(this.firstofmonth.getFullYear(),this.firstofmonth.getMonth(),this.firstofmonth.getDate());
+        var lastdaycal = new Date(this.lastofmonth.getFullYear(),this.lastofmonth.getMonth(),this.lastofmonth.getDate());
+        firstdaycal.setDate(firstdaycal.getDate() - firstdaycal.getDay() + this.options.weekdaystart);
         var dateRange = $A($R(firstdaycal,lastdaycal));
-		var cal_weeks_wrapper = this.table ? [] : new Element('div',{'class': 'calweekswrapper'});
+        var cal_weeks_wrapper = this.table ? [] : new Element('div',{'class': 'calweekswrapper'});
         var wk;
         var row;
         var lastday;
@@ -162,23 +162,23 @@ scal.prototype = {
                 slice.push(slice.last().succ());
             }
             slice.map(buildWeek);	
-			cal_weeks_wrapper[this.table ? 'push' : 'insert'](row);
+            cal_weeks_wrapper[this.table ? 'push' : 'insert'](row);
         }.bind(this));
         if(!this.options.exactweeks) {
             var toFinish = 42 - this.cells.size(); 
-			var wkstoFinish = Math.ceil(toFinish / 7);
-			if(wkstoFinish > 0) { toFinish = toFinish / wkstoFinish; }
-			$R(1,wkstoFinish).each(function(w){
-	            wk += 1;
-    	        row = new Element(this.table ? 'tr' : 'div',{'class':'cal_week_' + wk}).addClassName('weekbox'); 
-        	    $R(1,toFinish).each(function(i) {
-            	    var d = lastday.succ();
-                	var cell = this._buildDay(wk, d);
-	                row.insert(cell);
-					cal_weeks_wrapper[this.table ? 'push' : 'insert'](row);
-        	        lastday = d;
-            	}.bind(this));
-			}.bind(this));
+            var wkstoFinish = Math.ceil(toFinish / 7);
+            if(wkstoFinish > 0) { toFinish = toFinish / wkstoFinish; }
+            $R(1,wkstoFinish).each(function(w){
+                wk += 1;
+                row = new Element(this.table ? 'tr' : 'div',{'class':'cal_week_' + wk}).addClassName('weekbox'); 
+                $R(1,toFinish).each(function(i) {
+                    var d = lastday.succ();
+                    var cell = this._buildDay(wk, d);
+                    row.insert(cell);
+                    cal_weeks_wrapper[this.table ? 'push' : 'insert'](row);
+                    lastday = d;
+                }.bind(this));
+            }.bind(this));
         }	
         return cal_weeks_wrapper;
     },
@@ -188,14 +188,14 @@ scal.prototype = {
     _buildDay: function(week,day){
         this.dateRange.push(day);
         var cellid = 'cal_day_' + week + '_' + day.getDay();
-		var cell = new Element(this.table ? 'td' : 'div',{'class':cellid});
-		var celldate = new Element('div',{'class':cellid+'_date'}).addClassName('dayboxdate').update(day.getDate());
-		var cellvalue = new Element('div',{'class':cellid+'_value'}).addClassName('dayboxvalue');
+        var cell = new Element(this.table ? 'td' : 'div',{'class':cellid});
+        var celldate = new Element('div',{'class':cellid+'_date'}).addClassName('dayboxdate').update(day.getDate());
+        var cellvalue = new Element('div',{'class':cellid+'_value'}).addClassName('dayboxvalue');
         if(this.options.planner) { this._updatePlanner(day,cellvalue); }
         cell.insert(celldate).insert(cellvalue).addClassName('daybox').addClassName('daybox'+ day.format('dddd').toLowerCase());
-		// if we are on the currently selected date, set the class to dayselected (i.e. highlight it).
+        // if we are on the currently selected date, set the class to dayselected (i.e. highlight it).
         if(this._compareDates(day,this.currentdate,'dayselected')) {
-		 	cell.addClassName('dayselected');
+            cell.addClassName('dayselected');
             this.indicators.push('dayselected');
         }
         if(this._compareDates(day,new Date(),'today')) {
@@ -203,11 +203,11 @@ scal.prototype = {
             this.indicators.push('today');
         }
         if(day.getDay() == 6) { cell.addClassName('endweek'); }
-		// if we are outside the current month set the day style to 'deactivated'
+        // if we are outside the current month set the day style to 'deactivated'
         var cs = day.getMonth() != this.currentdate.getMonth() ? ['dayoutmonth','dayinmonth'] : ['dayinmonth','dayoutmonth'];
         cell.addClassName(cs[0]);
         if(cell.hasClassName(cs[1])) { cell.removeClassName(cs[1]); }
-		this.cells.push(cell);
+        this.cells.push(cell);
         return cell.observe('click', this._click.bindAsEventListener(this, this.cells.size() - 1));
     },
     _buildControls: function() {
@@ -226,10 +226,10 @@ scal.prototype = {
                 if(this.table) { el.writeAttribute({colspan: 4}); }
                 el.update(part.u).observe('click',part.f);
             } else {
-    		    el.addClassName('calcontrol');
+                el.addClassName('calcontrol');
                 el[typeof(part.u) == 'object' ? 'insert' : 'update'](part.u).observe('click',part.f);
             }
-		    cal_header.insert(el);
+            cal_header.insert(el);
         }.bind(this));
         return cal_header;
     },
@@ -247,11 +247,11 @@ scal.prototype = {
         this.title.update(this.currentdate.format(this.options.titleformat));
         this._buildCal();
     }, 
-	_setCurrentDate: function(date){
-		this.currentdate = new Date(date.getFullYear(),date.getMonth(),date.getDate());
-		this.firstofmonth = this.currentdate.firstofmonth();
-		this.lastofmonth = this.currentdate.lastofmonth();
-	},    
+    _setCurrentDate: function(date){
+        this.currentdate = new Date(date.getFullYear(),date.getMonth(),date.getDate());
+        this.firstofmonth = this.currentdate.firstofmonth();
+        this.lastofmonth = this.currentdate.lastofmonth();
+    },    
 /*------------------------------- PUBLIC -------------------------------*/        
     destroy: function(){
         this._emptyCells();
@@ -288,4 +288,3 @@ scal.prototype = {
         return this.element.visible();
     }
 };
-

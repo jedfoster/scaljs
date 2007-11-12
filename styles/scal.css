@@ -23,6 +23,8 @@ Now, you'll have a sweet red background for your scal.
 
 P.S. Try out the included versions to see how they work and have fun! 
 */
+table {border-collapse: collapse;}
+
 .scal{
 	background-color: white;
 	margin:3px;
@@ -90,10 +92,10 @@ P.S. Try out the included versions to see how they work and have fun!
 	font-size:16pt;
 }
 .scal .dayboxsunday{
-	background-color: light-gray;
+	background-color: lightgray;
 }
 .scal .dayboxsaturday{
-	background-color: light-gray;
+	background-color: lightgray;
 }
 .scal .daybox:hover{
 	border:1px solid red;
@@ -559,10 +561,6 @@ Contributed by Andrew Reutter
 }
 .iphonic .dayoutmonth{
 	color: rgb( 150, 150, 150 );
-}
-.iphonic .today{
-	color: #ffffff;
-	background-color: rgb( 115, 135, 165 );
 }
 .iphonic .dayselected{
 	color: #ffffff;

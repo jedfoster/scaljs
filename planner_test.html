@@ -42,12 +42,20 @@ var samplecal;
 	function showcalendars(){
 		//samplecal = new scal('samplecal','samplecal_value',{year:2007,month:8,day:3,titleformat:'mmmm yyyy',closebutton:'X',dayheadlength:2});
         samplecal = new scal('samplecal',updateyear,{titleformat:'mmmm yyyy',closebutton:'X',dayheadlength:2,weekdaystart:0,planner: myplanner});
-        var cell = samplecal.setPlannerValue(2007,11,28,"Here be dragons!");
+        var cell = samplecal.setPlannerValue(2007,11,28,"Here be dragons!"); // new planner date
         new Effect.Highlight(cell);
+        cell = samplecal.setPlannerValue(2007,11,10,"mom's appt", 'appt'); // existing planner date
+        new Effect.Highlight(cell);
+        cell = samplecal.setPlannerValue(2007,10,10,"payed rent", 'rent'); // month previous
         samplecal.setPlannerValue(2007,11,29,"Remove dragons!", 'dragonremove');
         cell = samplecal.updateDayValue(1,1, "More dragons!");
         new Effect.Highlight(cell);
         samplecal.updateDayValue(2,1, "Pepper Fest!", 'pepperfest');
+        var dt = samplecal.getDatesByEvent('renew license')[0];
+        samplecal.removeEventsByDate(dt,0);
+        var decevts = samplecal.getEventsByDate(new Date('December 17, 2007'));
+        var evtels = samplecal.getElementsByDate(new Date('November 7, 2007'));
+        var allevents = samplecal.getCurrentEvents(true);       
 	}
 
 	function changestyle(event){

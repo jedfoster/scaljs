@@ -1,10 +1,3 @@
-/* scaltables.css
-
-__DO NOT USE scal.css and scaltables.css TOGETHER__
-
-If you plan to use tables (tabular) with scal, use this stylesheet instead of scal.css
-*/
-
 .scal table {border-collapse: collapse;}
 
 .scal table.cal_table {
@@ -72,6 +65,61 @@ tinyscal - a mini version of the calendar type.  useful in tight spaces.
 
 .tinyscal table.cal_table tbody.cal_wrapper tr.weekboxname td {
 	font-size: 8pt;
+}
+
+/* 
+slick - an image based version of tinyscal. 
+ usage: define class of base element as "scal tinyscal slick" as slick is 
+        dependent on scal and tinyscal.
+*/	
+.scal.slick 
+{ 
+    font-family:Arial, sans-serif;        
+}
+
+.scal.slick .calheader 
+{
+    background:#ccc url(images/blackback.jpg) repeat-x center left; 
+}
+
+.scal.slick table.cal_table 
+{
+    border: 1px solid #000;    
+}
+
+.scal.slick table.cal_table thead tr.calheader td.caltitle 
+{
+    color: #fff;
+}
+
+.scal.slick table.cal_table tbody.cal_wrapper tr.weekbox td
+{
+    background:#ccc url(images/blueline.jpg) repeat-x center left; 
+}
+
+.scal.slick table.cal_table tbody.cal_wrapper tr.weekbox td.dayboxsunday {
+	background: #D3D3D3;
+}
+
+.scal.slick table.cal_table tbody.cal_wrapper tr.weekbox td.dayboxsaturday {
+	background: #D3D3D3;
+}
+
+.scal.slick table.cal_table tbody.cal_wrapper tr.weekbox td.dayselected
+{
+    background:#ccc url(images/blackback.jpg) repeat-x center left; 
+}
+
+.scal.slick table.cal_table tbody.cal_wrapper tr.weekbox td.today
+{
+    background:#ccc url(images/blueback.jpg) repeat-x center left; 
+    color: #000;
+    font-weight: bold;
+}
+
+.scal.slick table.cal_table tbody.cal_wrapper tr.weekboxname td 
+{
+    background:#ccc url(images/blackback.jpg) repeat-x center left; 
 }
 
 /*
