@@ -57,14 +57,14 @@ scal.prototype = {
           planner: false,
           tabular: false,
           year: this.startdate.getFullYear(),
-          month: 1,
-          day: 1
+          month: 0,
+          day: 0
         }, arguments[2] || { });   
         --this.options.month;
         this.table = false;
         this.thead = false;
-        if(this.options.month != 0 && Object.isNumber(this.options.month)) { this.startdate.setMonth(this.options.month); }
-        if(this.options.day != 1 && Object.isNumber(this.options.month)) { this.startdate.setDate(this.options.day); }
+        if(this.options.month != -1 && Object.isNumber(this.options.month)) { this.startdate.setMonth(this.options.month); }
+        if(this.options.day != 0 && Object.isNumber(this.options.day)) { this.startdate.setDate(this.options.day); }
         if(this.options.year != this.startdate.getFullYear() && Object.isNumber(this.options.month)) { this.startdate.setYear(this.options.year); }
         if(this.options.planner) { this.planner = this._setupPlanner(this.options.planner); }
         if(this.options.tabular) { 
