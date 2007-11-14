@@ -36,6 +36,7 @@ table {border-collapse: collapse;}
 	padding:10px;
 	font-size:24pt;
 	font-family:'Lucida Grande',Verdana,Arial,Sans-Serif;
+	line-height:normal;
 }
 .scal:hover{
 	cursor:pointer;
