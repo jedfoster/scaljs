@@ -34,6 +34,8 @@ table {border-collapse: collapse;}
 	min-height:300px;
 	display:block;
 	padding:10px;
+	font-size:24pt;
+	font-family:'Lucida Grande',Verdana,Arial,Sans-Serif;
 }
 .scal:hover{
 	cursor:pointer;
