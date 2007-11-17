@@ -39,12 +39,14 @@
             dayheadlength:2,
             prevbutton: '<img src="styles/images/prev.gif" />',
             nextbutton: '<img src="styles/images/next.gif" />',
+            yearnext: '<img src="styles/images/nexty.gif" />',
+            yearprev: '<img src="styles/images/prevy.gif" />',
             weekdaystart:0,
             tabular: true,
             planner: false
 			});	
-		var updateyear = function(e){ $('samplecal_value').value = e.date.format('mmmm dd, yyyy'); };		
-        var samplecal = new scal('samplecal', updateyear, options);
+		var updateyear = function(d){ $('samplecal_value').value = d.format('mmmm dd, yyyy'); };		
+        var samplecal = new scal('samplecal', 'samplecal_value', options);
         // ]]>
     </script>
   </body>

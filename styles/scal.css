@@ -78,6 +78,12 @@ P.S. Try out the included versions to see how they work and have fun!
 .scal .calnextmonth{
 	float:right;
 }
+.scal .calnextyear{
+	display:none;
+}
+.scal .calprevyear{
+	display:none;
+}
 .scal .daybox{
 	float:left;
 	border:1px solid black;
@@ -213,6 +219,12 @@ iscal - based on apple's ical default design
 .iscal .calnextmonth{
 	float:right;
 }
+.iscal .calnextyear{
+	display:none;
+}
+.iscal .calprevyear{
+	display:none;
+}
 .iscal .daybox{
 	float:left;
 	background-color: white;
@@ -332,6 +344,12 @@ googleblue - inspired by google's default calendar widget on iGoogle
 .googleblue .calnextmonth{
 	float:right;
 }
+.googleblue .calnextyear{
+	display:none;
+}
+.googleblue .calprevyear{
+	display:none;
+}
 .googleblue .daybox{
 	float:left;
 	background-color: white;
@@ -440,6 +458,12 @@ dashblack - inspired by apple's default calendar widget in Dashboard
 .dashblack .calnextmonth{
 	float:right;
 }
+.dashblack .calnextyear{
+	display:none;
+}
+.dashblack .calprevyear{
+	display:none;
+}
 .dashblack .daybox{
 	float:left;
 	background-color: #000000;
@@ -531,6 +555,12 @@ Contributed by Andrew Reutter
 }
 .iphonic .calprevmonth{ float:left; }
 .iphonic .calnextmonth{ float:right; }
+.iphonic .calnextyear{
+	display:none;
+}
+.iphonic .calprevyear{
+	display:none;
+}
 .iphonic .calclose{ float:right; display:none; }
 
 .iphonic .daybox{

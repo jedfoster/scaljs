@@ -5,7 +5,7 @@
 	<link rel="stylesheet" href="styles/scal.css" type="text/css" media="screen"/>
 	<script src="javascripts/prototype.js" type="text/javascript"></script>
 	<script src="javascripts/scal.js" type="text/javascript"></script>
-
+	
 	<title>Scal Tester - A Mini Test Suite for Checking Scal</title>
     <style type="text/css">
         form fieldset {
@@ -88,8 +88,8 @@ var samplecal;
         $('samplecal').className = '';
         $('samplecal').addClassName(clicked.innerHTML);
     }
-    function updateyear(e){
-		$('samplecal_value').update(e.date.format('mmmm dd, yyyy'));
+    function updateyear(d){
+		$('samplecal_value').update(d.format('mmmm dd, yyyy'));
 	}
     function explodeday(){
         $(samplecal).setCurrentDate(samplecal.selecteddate);
@@ -190,8 +190,10 @@ var samplecal;
                         Or pick one from the list:
 					<select id="switchstring" name="switchstring" onchange="samplecal.setCurrentDate($F('switchstring')); return false;">
 						<option>init</option>
-						<option>up</option>
-						<option>down</option>
+						<option>monthup</option>
+						<option>monthdown</option>
+						<option>yearup</option>
+						<option>yeardown</option>						
 					</select>
                     </label>
                     <input type="submit" value="Switch It" />

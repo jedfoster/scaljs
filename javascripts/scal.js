@@ -12,6 +12,7 @@ Object.extend(Date.prototype, {
     lastofmonth: function(){
         return new Date(this.getFullYear(),this.getMonth()+1,0);
     },
+	formatPadding: true,
     format: function(f){
         if (!this.valueOf()) { return '&nbsp;'; }
         var d = this;
@@ -19,10 +20,10 @@ Object.extend(Date.prototype, {
             'yyyy' : d.getFullYear(),
             'mmmm': this.monthnames[d.getMonth()],
             'mmm':  this.monthnames[d.getMonth()].substr(0, 3),
-            'mm':   d.getMonth() + 1,
+            'mm':   this.formatPadding ? ((d.getMonth()).succ()).toPaddedString(2) : (d.getMonth()).succ(),
             'dddd': this.daynames[d.getDay()],
             'ddd':  this.daynames[d.getDay()].substr(0, 3),
-            'dd':   d.getDate(),
+            'dd':   d.getDate().toPaddedString(2),
             'hh':   h = d.getHours() % 12 ? h : 12,
             'nn':   d.getMinutes(),
             'ss':   d.getSeconds(),
@@ -45,10 +46,14 @@ scal.prototype = {
         this.startdate = new Date();
         this.startdate.setHours(0,0,0,0);
         this.options = Object.extend({
+		  daypadding: false,
           titleformat: 'mmmm yyyy',
+          updateformat: 'yyyy-mm-dd',
           closebutton: 'X',
           prevbutton: '&laquo;',
           nextbutton: '&raquo;',
+          yearnext: '&raquo;&raquo;',
+          yearprev: '&laquo;&laquo;',
           openeffect: type == 'Effect' ? Effect.Appear : Element.show,
           closeeffect: type == 'Effect' ? Effect.Fade : Element.hide,
           exactweeks: false,
@@ -77,6 +82,8 @@ scal.prototype = {
         this._setCurrentDate(this.startdate); 
         this.initDate = new Date(this.currentdate);
         this.controls = this._buildControls();
+		this.title.setAttribute('title', this.initDate.format(this.options.titleformat));
+        this._updateTitles();
         this[this.table ? 'thead' : 'element'].insert(this.controls);
         this.cal_wrapper = this._buildHead();
         this.cells = [];
@@ -95,13 +102,8 @@ scal.prototype = {
         if(!(Object.isUndefined(this.cal_weeks_wrapper) || this.table)) { this.cal_weeks_wrapper.remove(); }
         this.cal_weeks_wrapper = this._buildWrapper();
         if(this.table) {
-            var rows = this.table.select('tbody tr.weekbox');
-            if(rows) { 
-                rows.shift();	
-                rows.invoke('remove');
-            }
-            var body = this.table.select('tbody')[0];
-            if(body) { body.remove(); }
+            this.table.select('tbody tr.weekbox:not(.weekboxname)').invoke('remove');
+            this.table.select('tbody.cal_wrapper').invoke('remove');
             this.cal_weeks_wrapper.each(function(row){
                 this.cal_wrapper.insert(row);
             }.bind(this));
@@ -113,17 +115,16 @@ scal.prototype = {
     _click: function(event,cellIndex) {
         this.element.select('.dayselected').invoke('removeClassName', 'dayselected');
         (event.target.hasClassName('daybox') ? event.target : event.target.up()).addClassName('dayselected');
-        event.date = this.dateRange[cellIndex];
         this._setCurrentDate(this.dateRange[cellIndex]);
-        this._updateExternal(event);
+        this._updateExternal();
     },
-    _updateExternal: function(event){		
-        if (Object.isString(this.updateelement)){
-            // update the defined update element with the currently selected date
-            $(this.updateelement).update(event);
-        }else if (Object.isFunction(this.updateelement)){
-            this.updateelement(event);
-        };		
+    _updateExternal: function(){	
+        if (Object.isFunction(this.updateelement)){
+            this.updateelement(this.currentdate);
+        } else {	
+            var updateElement = $(this.updateelement);
+            updateElement[updateElement.tagName == 'INPUT' ? 'setValue' : 'update'](this.currentdate.format(this.options.updateformat));
+        }            
     },    
     _buildHead: function() {
         var cal_wrapper = new Element(this.table ? 'tbody' : 'div',{'class':'cal_wrapper'});
@@ -173,8 +174,7 @@ scal.prototype = {
                 row = new Element(this.table ? 'tr' : 'div',{'class':'cal_week_' + wk}).addClassName('weekbox'); 
                 $R(1,toFinish).each(function(i) {
                     var d = lastday.succ();
-                    var cell = this._buildDay(wk, d);
-                    row.insert(cell);
+                    row.insert(this._buildDay(wk, d));
                     cal_weeks_wrapper[this.table ? 'push' : 'insert'](row);
                     lastday = d;
                 }.bind(this));
@@ -189,7 +189,7 @@ scal.prototype = {
         this.dateRange.push(day);
         var cellid = 'cal_day_' + week + '_' + day.getDay();
         var cell = new Element(this.table ? 'td' : 'div',{'class':cellid});
-        var celldate = new Element('div',{'class':cellid+'_date'}).addClassName('dayboxdate').update(day.getDate());
+        var celldate = new Element('div',{'class':cellid+'_date'}).addClassName('dayboxdate').update(this.options.daypadding ? ((day.getDate()).toPaddedString(2)) : day.getDate());
         var cellvalue = new Element('div',{'class':cellid+'_value'}).addClassName('dayboxvalue');
         if(this.options.planner) { this._updatePlanner(day,cellvalue); }
         cell.insert(celldate).insert(cellvalue).addClassName('daybox').addClassName('daybox'+ day.format('dddd').toLowerCase());
@@ -210,20 +210,36 @@ scal.prototype = {
         this.cells.push(cell);
         return cell.observe('click', this._click.bindAsEventListener(this, this.cells.size() - 1));
     },
+    _updateTitles: function() {
+        var yr = this.currentdate.getFullYear();
+        var mnth = this.currentdate.getMonth();
+        var titles = {
+            calprevmonth: Date.prototype.monthnames[(mnth - 1) == -1 ? 11 : mnth - 1],
+            calprevyear: yr - 1,
+            calnextyear: yr + 1,
+            calnextmonth: Date.prototype.monthnames[(mnth + 1) == 12 ? 0 : mnth + 1]
+        };
+        this.controls.select('.calcontrol').each(function(ctrl) {
+           var title = titles[ctrl.className.split(' ')[0]];
+           if(!Object.isUndefined(title)) { ctrl.setAttribute('title',title); }
+        });
+    },
     _buildControls: function() {
         var hParts = [
             {p: 'calclose', u: this.options.closebutton, f:  this.toggleCalendar.bindAsEventListener(this)},
-            {p: 'calprevmonth', u: this.options.prevbutton, f: this._switchMonth.bindAsEventListener(this,'down')},
-            {p: 'calnextmonth', u: this.options.nextbutton, f: this._switchMonth.bindAsEventListener(this,'up')},
-            {p: 'caltitle', u: this.currentdate.format(this.options.titleformat), f: this._switchMonth.bindAsEventListener(this,'init')}
+            {p: 'calprevmonth', u: this.options.prevbutton, f: this._switchCal.bindAsEventListener(this,'monthdown')},
+            {p: 'calprevyear', u: this.options.yearprev, f: this._switchCal.bindAsEventListener(this,'yeardown')},
+            {p: 'calnextyear', u: this.options.yearnext, f: this._switchCal.bindAsEventListener(this,'yearup')},
+            {p: 'calnextmonth', u: this.options.nextbutton, f: this._switchCal.bindAsEventListener(this,'monthup')},
+            {p: 'caltitle', u: this.currentdate.format(this.options.titleformat), f: this._switchCal.bindAsEventListener(this,'init')}
         ];
-        if(this.table) { hParts = [hParts[1],hParts[3],hParts[2],hParts[0]]; }
+        if(this.table) { hParts = [hParts[1],hParts[2],hParts[5],hParts[3],hParts[4],hParts[0]]; }
         var cal_header = new Element(this.table ? 'tr' : 'div',{'class':'calheader'});
         hParts.each(function(part) {
             var el = new Element(this.table ? 'td' : 'div',{'class': part.p});
             if(part.p == 'caltitle') {
                 this.title = el;
-                if(this.table) { el.writeAttribute({colspan: 4}); }
+                if(this.table) { el.writeAttribute({colspan: 2}); }
                 el.update(part.u).observe('click',part.f);
             } else {
                 el.addClassName('calcontrol');
@@ -233,48 +249,73 @@ scal.prototype = {
         }.bind(this));
         return cal_header;
     },
-    _switchMonth: function(e,direction){
-        var dates = {
-            up: this.currentdate.getMonth() + 1,
-            down: this.currentdate.getMonth() - 1
-        };
-        if(Object.isUndefined(dates[direction])) {
-            this.currentdate = this.initDate;
-        } else {
-            this.currentdate.setMonth(dates[direction]);
-        }
-        this._setCurrentDate(this.currentdate);
+    _switchCal: function(){
+        var direction = arguments[1] ? arguments[1] : arguments[0];
+		var params = {f: 'setTime', p: this.initDate.getTime()};
+		if(direction != 'init') {
+            var d = this.currentdate[direction.include('month') ? 'getMonth' : 'getFullYear']();
+			params = {f: direction.include('month') ? 'setMonth' : 'setYear', p: direction.include('up') ? d + 1 : d - 1};
+		}
+		this.currentdate[params.f](params.p);
+        this._update();
+    }, 
+    _update: function() {
+        this._setCurrentDate(arguments[0] ? arguments[0] : this.currentdate);
         this.title.update(this.currentdate.format(this.options.titleformat));
         this._buildCal();
-    }, 
+        this._updateTitles();
+    },
     _setCurrentDate: function(date){
         this.currentdate = new Date(date.getFullYear(),date.getMonth(),date.getDate());
         this.firstofmonth = this.currentdate.firstofmonth();
         this.lastofmonth = this.currentdate.lastofmonth();
     },    
+    _getCellIndexByDate: function(d) {
+        var dj = d.toJSON();
+        var cellIndex = 0;
+        this.dateRange.each(function(dt,i) {
+            if(dt.toJSON() == dj) {
+                cellIndex = i;
+                throw $break;
+            }
+        });
+        return cellIndex;
+    },
 /*------------------------------- PUBLIC -------------------------------*/        
     destroy: function(){
         this._emptyCells();
-        if(!Object.isUndefined(this.cal_weeks_wrapper)) { this.cal_weeks_wrapper.remove(); }
-        if(this.table) { this.element.select('.cal_table').invoke('remove'); }
+        if(this.table) { 
+            this.element.select('.cal_table').invoke('remove');
+        } else {
+            this.cal_weeks_wrapper.remove();
+        }
         this.element.select('.caltitle').invoke('stopObserving');
         this.element.select('.calcontrol').invoke('stopObserving');
-        this.cal_wrapper.remove();
-        this.controls.remove();
+        [this.cal_wrapper,this.controls].invoke('remove');
     },
     setCurrentDate: function(direction){
-        if(Object.isString(direction)) {
-            this._switchMonth('', direction);
-        } else if(direction instanceof Date) {
-            this._setCurrentDate(direction);
-            this.title.update(this.currentdate.format(this.options.titleformat));
-            this._buildCal();
-        }
+        this[(direction instanceof Date) ? '_update' : '_switchCal'](direction);
+        if(!arguments[1]) { this._updateExternal(); } 
     },
     toggleCalendar: function(){
         this.options[this.element.visible() ? 'closeeffect' : 'openeffect'](this.element);
     },
-/*------------------------------- PLANNER PLACEHOLDERS -------------------------------*/            
+    getElementByDate: function(d) {
+        return this.cells[this._getCellIndexByDate(d)];
+    },
+    getElementsByWeek: function(week) {
+        return this.element.select('.weekbox:nth-of-type(' + (week + 1) + ') .daybox:not(.dayboxname)');
+    },
+    getSelectedElement: function() {
+        return this.element.select('.dayselected')[0];
+    },
+    getTodaysElement: function() {
+        return this.element.select('.today')[0];
+    },
+    getDateByElement: function(element) {
+        return this.dateRange[this.cells.indexOf(element)];
+    },
+/*------------------------------- PLUG-IN PLACEHOLDERS -------------------------------*/            
     _setupPlanner: Prototype.emptyFunction,
     _updatePlanner: Prototype.emptyFunction,
 /*------------------------------- DEPRECATED -------------------------------*/            

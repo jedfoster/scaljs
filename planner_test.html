@@ -54,8 +54,11 @@ var samplecal;
         var dt = samplecal.getDatesByEvent('renew license')[0];
         samplecal.removeEventsByDate(dt,0);
         var decevts = samplecal.getEventsByDate(new Date('December 17, 2007'));
-        var evtels = samplecal.getElementsByDate(new Date('November 7, 2007'));
-        var allevents = samplecal.getCurrentEvents(true);       
+        var evtels = samplecal.getEventElementsByDate(new Date('November 7, 2007'));
+        var allevents = samplecal.getCurrentEvents(true);
+        var wkevents = samplecal.getEventElementsByWeek(1);
+        var selevents = samplecal.getSelectedEvents();
+        var todaysevents = samplecal.getTodaysEvents();
 	}
 
 	function changestyle(event){
@@ -63,8 +66,8 @@ var samplecal;
 		$('samplecal').className = '';
 		$('samplecal').addClassName(clicked.innerHTML);
 	}
-    function updateyear(e){
-		$('samplecal_value').update(e.date.format('mmmm dd, yyyy'));
+    function updateyear(d){
+		$('samplecal_value').update(d.format('mmmm dd, yyyy'));
 	}
 	function explodeday(){
 		$(samplecal).setCurrentDate(samplecal.selecteddate);
