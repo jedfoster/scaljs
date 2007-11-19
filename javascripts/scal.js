@@ -46,6 +46,7 @@ scal.prototype = {
         this.startdate = new Date();
         this.startdate.setHours(0,0,0,0);
         this.options = Object.extend({
+		  oncalchange: Prototype.emptyFunction,
 		  daypadding: false,
           titleformat: 'mmmm yyyy',
           updateformat: 'yyyy-mm-dd',
@@ -250,7 +251,14 @@ scal.prototype = {
         return cal_header;
     },
     _switchCal: function(){
-        var direction = arguments[1] ? arguments[1] : arguments[0];
+		if(arguments[1]) {
+			var event = arguments[0];
+			var direction = arguments[1];
+			event.date = this.currentdate;
+			this.options.oncalchange(event);
+		} else {
+			var direction = arguments[0];
+		}			
 		var params = {f: 'setTime', p: this.initDate.getTime()};
 		if(direction != 'init') {
             var d = this.currentdate[direction.include('month') ? 'getMonth' : 'getFullYear']();
@@ -289,13 +297,13 @@ scal.prototype = {
         } else {
             this.cal_weeks_wrapper.remove();
         }
-        this.element.select('.caltitle').invoke('stopObserving');
-        this.element.select('.calcontrol').invoke('stopObserving');
+		this.controls.descendants().invoke('stopObserving');
         [this.cal_wrapper,this.controls].invoke('remove');
     },
     setCurrentDate: function(direction){
         this[(direction instanceof Date) ? '_update' : '_switchCal'](direction);
-        if(!arguments[1]) { this._updateExternal(); } 
+        if(!arguments[1]) { this._updateExternal(); }
+		return this.currentdate; 
     },
     toggleCalendar: function(){
         this.options[this.element.visible() ? 'closeeffect' : 'openeffect'](this.element);

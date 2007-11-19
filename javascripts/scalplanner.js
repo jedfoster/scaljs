@@ -33,17 +33,6 @@
             this.planner[plannerdate] = { cls: planclasses, val: planvalues };
         }
     },    
-    _getCellIndexByDate: function(d) {
-        var dj = d.toJSON();
-        var cellIndex = 0;
-        this.dateRange.each(function(dt,i) {
-            if(dt.toJSON() == dj) {
-                cellIndex = i;
-                throw $break;
-            }
-        });
-        return cellIndex;
-    },
     _compareMonthYear: function(date1,date2) {
         return Object.isUndefined(['getMonth','getFullYear'].find(function(n){ return date1[n]() != date2[n](); }));
     },
@@ -89,8 +78,17 @@
             return false;
         }
     },
-    getElementsByDate: function(d) {
-        return this.cells[this._getCellIndexByDate(d)].select('p.dayboxevent');
+    getEventElementsByDate: function(d) {
+        return this.getElementByDate(d).select('p.dayboxevent');
+    },
+    getEventElementsByWeek: function(week) {
+        return this.getElementsByWeek(week).collect(function(e){ return e.select('p.dayboxevent'); });
+    },
+    getSelectedEvents: function() {
+        return this.getSelectedElement().select('p.dayboxevent');
+    },
+    getTodaysEvents: function() {
+        return this.getTodaysElement().select('p.dayboxevent');
     },
     updateDayValue: function(week,day,value){
         var planclasses = 'dayboxevent';
