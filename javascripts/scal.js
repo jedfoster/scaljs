@@ -264,7 +264,7 @@ scal.prototype = {
 			params = {f: direction.include('month') ? 'setMonth' : 'setYear', p: direction.include('up') ? d + 1 : d - 1};
 		}
 		this.currentdate[params.f](params.p);
-    	this.options.oncalchange(event);
+    	if(arguments[1]) { this.options.oncalchange(event); }
         this._update();
     }, 
     _update: function() {
