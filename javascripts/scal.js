@@ -255,7 +255,6 @@ scal.prototype = {
 			var event = arguments[0];
 			var direction = arguments[1];
 			event.date = this.currentdate;
-			this.options.oncalchange(event);
 		} else {
 			var direction = arguments[0];
 		}			
@@ -265,6 +264,7 @@ scal.prototype = {
 			params = {f: direction.include('month') ? 'setMonth' : 'setYear', p: direction.include('up') ? d + 1 : d - 1};
 		}
 		this.currentdate[params.f](params.p);
+    	this.options.oncalchange(event);
         this._update();
     }, 
     _update: function() {
