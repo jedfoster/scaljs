@@ -1,3 +1,11 @@
+/*  Scal - prototype calendar/date picker
+ *   - Jamie Grove
+ *   - Ian Tyndall
+ *
+ *  Scal is freely distributable under the terms of an MIT-style license.
+ *  For details, see the Scal web site: http://scal.fieldguidetoprogrammers.com
+ *
+ *--------------------------------------------------------------------------*/
 Object.extend(Date.prototype, {
     monthnames: ['January','February','March','April','May','June','July','August','September','October','November','December'],
     daynames: ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'],
