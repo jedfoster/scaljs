@@ -20,7 +20,7 @@ Object.extend(Date.prototype, {
     lastofmonth: function(){
         return new Date(this.getFullYear(),this.getMonth()+1,0);
     },
-	formatPadding: true,
+    formatPadding: true,
     format: function(f){
         if (!this.valueOf()) { return '&nbsp;'; }
         var d = this;
@@ -54,8 +54,8 @@ scal.prototype = {
         this.startdate = new Date();
         this.startdate.setHours(0,0,0,0);
         this.options = Object.extend({
-		  oncalchange: Prototype.emptyFunction,
-		  daypadding: false,
+          oncalchange: Prototype.emptyFunction,
+          daypadding: false,
           titleformat: 'mmmm yyyy',
           updateformat: 'yyyy-mm-dd',
           closebutton: 'X',
@@ -91,7 +91,7 @@ scal.prototype = {
         this._setCurrentDate(this.startdate); 
         this.initDate = new Date(this.currentdate);
         this.controls = this._buildControls();
-		this.title.setAttribute('title', this.initDate.format(this.options.titleformat));
+        this.title.setAttribute('title', this.initDate.format(this.options.titleformat));
         this._updateTitles();
         this[this.table ? 'thead' : 'element'].insert(this.controls);
         this.cal_wrapper = this._buildHead();
@@ -259,20 +259,20 @@ scal.prototype = {
         return cal_header;
     },
     _switchCal: function(){
-		if(arguments[1]) {
-			var event = arguments[0];
-			var direction = arguments[1];
-			event.date = this.currentdate;
-		} else {
-			var direction = arguments[0];
-		}			
-		var params = {f: 'setTime', p: this.initDate.getTime()};
-		if(direction != 'init') {
+        if(arguments[1]) {
+            var event = arguments[0];
+            var direction = arguments[1];
+            event.date = this.currentdate;
+        } else {
+            var direction = arguments[0];
+        }			
+        var params = {f: 'setTime', p: this.initDate.getTime()};
+        if(direction != 'init') {
             var d = this.currentdate[direction.include('month') ? 'getMonth' : 'getFullYear']();
-			params = {f: direction.include('month') ? 'setMonth' : 'setYear', p: direction.include('up') ? d + 1 : d - 1};
-		}
-		this.currentdate[params.f](params.p);
-    	if(arguments[1]) { this.options.oncalchange(event); }
+            params = {f: direction.include('month') ? 'setMonth' : 'setYear', p: direction.include('up') ? d + 1 : d - 1};
+        }
+        this.currentdate[params.f](params.p);
+        if(arguments[1]) { this.options.oncalchange(event); }
         this._update();
     }, 
     _update: function() {
@@ -311,7 +311,7 @@ scal.prototype = {
     setCurrentDate: function(direction){
         this[(direction instanceof Date) ? '_update' : '_switchCal'](direction);
         if(!arguments[1]) { this._updateExternal(); }
-		return this.currentdate; 
+        return this.currentdate; 
     },
     toggleCalendar: function(){
         this.options[this.element.visible() ? 'closeeffect' : 'openeffect'](this.element);
