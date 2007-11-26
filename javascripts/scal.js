@@ -287,10 +287,10 @@ scal.prototype = {
         this.lastofmonth = this.currentdate.lastofmonth();
     },    
     _getCellIndexByDate: function(d) {
-        var dj = d.toJSON();
+        var findDate = d.getTime();
         var cellIndex = 0;
         this.dateRange.each(function(dt,i) {
-            if(dt.toJSON() == dj) {
+            if(dt.getTime() == findDate) {
                 cellIndex = i;
                 throw $break;
             }
@@ -301,7 +301,7 @@ scal.prototype = {
     destroy: function(){
         this._emptyCells();
         if(this.table) { 
-            this.element.select('.cal_table').invoke('remove');
+            this.table.remove();
         } else {
             this.cal_weeks_wrapper.remove();
         }
