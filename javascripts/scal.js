@@ -51,8 +51,7 @@ scal.prototype = {
             function(){ if(!Object.isUndefined(Effect)) { return 'Effect'; }},
             function(){ return 'Element'; }
         );  
-        this.startdate = new Date();
-        this.startdate.setHours(0,0,0,0);
+        var currentYear = 
         this.options = Object.extend({
           oncalchange: Prototype.emptyFunction,
           daypadding: false,
@@ -69,17 +68,11 @@ scal.prototype = {
           dayheadlength: 2,
           weekdaystart: 0,
           planner: false,
-          tabular: false,
-          year: this.startdate.getFullYear(),
-          month: 0,
-          day: 0
+          tabular: false
         }, arguments[2] || { });   
-        --this.options.month;
         this.table = false;
         this.thead = false;
-        if(this.options.month != -1 && Object.isNumber(this.options.month)) { this.startdate.setMonth(this.options.month); }
-        if(this.options.day != 0 && Object.isNumber(this.options.day)) { this.startdate.setDate(this.options.day); }
-        if(this.options.year != this.startdate.getFullYear() && Object.isNumber(this.options.month)) { this.startdate.setYear(this.options.year); }
+        this.startdate = this._setStartDate(arguments[2]);
         if(this.options.planner) { this.planner = this._setupPlanner(this.options.planner); }
         if(this.options.tabular) { 
             this.table = new Element('table',{'class': 'cal_table',border: 0,cellspacing: 0,cellpadding: 0});
@@ -99,6 +92,17 @@ scal.prototype = {
         this._buildCal();
     },
 /*------------------------------- INTERNAL -------------------------------*/    
+    _setStartDate: function(args) {
+        var startday = new Date();
+        this.options.month = args.month && Object.isNumber(args.month) ? args.month - 1 : startday.getMonth();
+        this.options.year = args.year && Object.isNumber(args.year) ? args.year : startday.getFullYear();
+        this.options.day = args.day && Object.isNumber(args.day) ? args.day : (this.options.month != startday.getMonth()) ? 1 : startday.getDate();
+        startday.setHours(0,0,0,0);
+        startday.setDate(this.options.day);
+        startday.setMonth(this.options.month);
+        startday.setFullYear(this.options.year);
+        return startday;
+    },
     _emptyCells: function() {
         if(this.cells.size() > 0) { 
             this.cells.invoke('stopObserving'); 
