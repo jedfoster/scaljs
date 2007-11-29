@@ -1,37 +1,37 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 <head>
-	<link rel="stylesheet" href="styles/stylemain.css" type="text/css" media="screen"/>
-	<link rel="stylesheet" href="styles/scal.css" type="text/css" media="screen"/>
-	<script src="javascripts/prototype.js" type="text/javascript"></script>
-	<script src="javascripts/scal.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="styles/stylemain.css" type="text/css" media="screen"/>
+    <link rel="stylesheet" href="styles/scal.css" type="text/css" media="screen"/>
+    <script src="javascripts/prototype.js" type="text/javascript"></script>
+    <script src="javascripts/scal.js" type="text/javascript"></script>
 	
-	<title>Scal Tester - A Mini Test Suite for Checking Scal</title>
+    <title>Scal Tester - A Mini Test Suite for Checking Scal</title>
     <style type="text/css">
         form fieldset {
-        	display: block;
-        	margin: 0px;
+            display: block;
+            margin: 0px;
             padding: 0 1em 1em 1em;
             font-size: 10pt;
         }
 
         form input {
-        	display: block;
-        	width: 15em;
+            display: block;
+            width: 15em;
         }
 
         form label {
-        	display: block;
-        	margin-bottom: 1em;
-        	font-weight: bold;
+            display: block;
+            margin-bottom: 1em;
+            font-weight: bold;
         }
 
         form label.first {
-        	padding-top: 1em;
+            padding-top: 1em;
         }
 
         form select {
-        	display: block;
+            display: block;
         }
     </style>
 </head>
@@ -89,8 +89,8 @@ var samplecal;
         $('samplecal').addClassName(clicked.innerHTML);
     }
     function updateyear(d){
-		$('samplecal_value').update(d.format('mmmm dd, yyyy'));
-	}
+        $('samplecal_value').update(d.format('mmmm dd, yyyy'));
+    }
     function explodeday(){
         $(samplecal).setCurrentDate(samplecal.selecteddate);
         $(samplecal).buildCalendar();
@@ -188,13 +188,13 @@ var samplecal;
                     </label>
                     <label for="switchstring">
                         Or pick one from the list:
-					<select id="switchstring" name="switchstring" onchange="samplecal.setCurrentDate($F('switchstring')); return false;">
-						<option>init</option>
-						<option>monthup</option>
-						<option>monthdown</option>
-						<option>yearup</option>
-						<option>yeardown</option>						
-					</select>
+                    <select id="switchstring" name="switchstring" onchange="samplecal.setCurrentDate($F('switchstring')); return false;">
+                        <option>init</option>
+                        <option>monthup</option>
+                        <option>monthdown</option>
+                        <option>yearup</option>
+                        <option>yeardown</option>						
+                    </select>
                     </label>
                     <input type="submit" value="Switch It" />
                 </fieldset>
