@@ -92,11 +92,12 @@ scal.prototype = {
         this._buildCal();
     },
 /*------------------------------- INTERNAL -------------------------------*/    
-    _setStartDate: function(args) {
+    _setStartDate: function() {
+	var args = arguments[0];
         var startday = new Date();
-        this.options.month = args.month && Object.isNumber(args.month) ? args.month - 1 : startday.getMonth();
-        this.options.year = args.year && Object.isNumber(args.year) ? args.year : startday.getFullYear();
-        this.options.day = args.day && Object.isNumber(args.day) ? args.day : (this.options.month != startday.getMonth()) ? 1 : startday.getDate();
+        this.options.month = args && args.month && Object.isNumber(args.month) ? args.month - 1 : startday.getMonth();
+        this.options.year = args && args.year && Object.isNumber(args.year) ? args.year : startday.getFullYear();
+        this.options.day = args && args.day && Object.isNumber(args.day) ? args.day : (this.options.month != startday.getMonth()) ? 1 : startday.getDate();
         startday.setHours(0,0,0,0);
         startday.setDate(this.options.day);
         startday.setMonth(this.options.month);
