@@ -144,8 +144,8 @@ scal.prototype = {
         var cal_wrapper = new Element(this.table ? 'tbody' : 'div',{'class':'cal_wrapper'});
         var weekbox = new Element(this.table ? 'tr' : 'div',{'class':'weekbox weekboxname'});
         Date.prototype.daynames.sortBy(function(s,i){
-            i+=this.options.weekdaystart;
-            if(i>6){i-=7;}
+            i-=this.options.weekdaystart;
+            if(i<0){i+=7;}
             return i;
         }.bind(this)).each(function(day,i) {
         var cell = new Element(this.table ? 'td' : 'div',{'class':'cal_day_name_'+ i});
