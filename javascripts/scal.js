@@ -51,7 +51,6 @@ scal.prototype = {
             function(){ if(!Object.isUndefined(Effect)) { return 'Effect'; }},
             function(){ return 'Element'; }
         );  
-        var currentYear = 
         this.options = Object.extend({
           oncalchange: Prototype.emptyFunction,
           daypadding: false,
