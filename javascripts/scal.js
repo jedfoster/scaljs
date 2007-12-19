@@ -160,7 +160,7 @@ scal.prototype = {
 		if(this.options.weekdaystart-firstdaycal.getDay() < firstdaycal.getDate()){
         firstdaycal.setDate(firstdaycal.getDate() - firstdaycal.getDay() + this.options.weekdaystart);
         } else {
-		firstdaycal.setDate(firstdaycal.getDate() - (this.options.weekdaystart - firstdaycal.getDay() + 1));
+		firstdaycal.setDate(firstdaycal.getDate() - (firstdaycal.getDay() + 7 - this.options.weekdaystart));
 		}
         var dateRange = $A($R(firstdaycal,lastdaycal));
         var cal_weeks_wrapper = this.table ? [] : new Element('div',{'class': 'calweekswrapper'});
