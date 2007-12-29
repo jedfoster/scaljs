@@ -23,8 +23,8 @@ var samplecal;
 		$('samplecal').className = '';
 		$('samplecal').addClassName(clicked.innerHTML);
 	}
-    function updateyear(e){
-		$('samplecal_value').update(e.date.format('mmmm dd, yyyy'));
+    function updateyear(d){
+		$('samplecal_value').update(d.format('mmmm dd, yyyy'));
 	}
 	function explodeday(){
 		$(samplecal).setCurrentDate(samplecal.selecteddate);

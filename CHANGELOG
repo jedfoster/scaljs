@@ -1,0 +1,12 @@
+scal Changelog
+
+Version 2.01 (Date here)
+	
+	- dayselected bugfix: dayselected classname would appear on a month other than the
+		month of the selected day
+	- performance enhancements: optimized calendar month/year switching due to
+		excessive cpu usage with this functionality in previous versions
+	- added minified versions of scal and scalplanner
+	- enhanced weekdaystart option to accept a string(Sunday,Monday...) or number(day index)
+	- replaced oncalchange with beforecalchange & aftercalchange in order to
+		have greater control of calendar switching

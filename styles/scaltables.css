@@ -59,6 +59,11 @@ tinyscal - a mini version of the calendar type.  useful in tight spaces.
 	width: 154px;
 }
 
+.tinyscal table.cal_table tr.calheader td.caltitle {
+	width: 60px;
+	height: 30px;
+}
+
 .tinyscal table.cal_table tbody.cal_wrapper tr.weekboxname td {
 	width: 20px;
 }
@@ -67,6 +72,9 @@ tinyscal - a mini version of the calendar type.  useful in tight spaces.
 	font-size: 8pt;
 }
 
+.tinyscal table.cal_table tbody.cal_wrapper tr.weekbox td {
+	width: 25px;
+}
 /* 
 slick - an image based version of tinyscal. 
  usage: define class of base element as "scal tinyscal slick" as slick is 

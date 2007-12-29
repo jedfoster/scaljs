@@ -25,7 +25,7 @@ P.S. Try out the included versions to see how they work and have fun!
 */
 
 .scal{
-	background-color: white;
+	background-color: #fff;
 	margin:3px;
 	border:1px dashed gray;
 	font-size:24pt;
@@ -33,7 +33,6 @@ P.S. Try out the included versions to see how they work and have fun!
 	min-height:300px;
 	display:block;
 	padding:10px;
-	font-size:24pt;
 	font-family:'Lucida Grande',Verdana,Arial,Sans-Serif;
 	line-height:normal;
 }
@@ -66,10 +65,10 @@ P.S. Try out the included versions to see how they work and have fun!
 }
 .scal .calcontrol:hover{
 	background-color:red;
-	color:white;
+	color: #fff;
 }
 .scal .calclose{
-	border: 1px solid black;
+	border: 1px solid #000;
 	float:right;
 }
 .scal .calprevmonth{
@@ -86,17 +85,17 @@ P.S. Try out the included versions to see how they work and have fun!
 }
 .scal .daybox{
 	float:left;
-	border:1px solid black;
+	border:1px solid #000;
 	width: 60px;
-	color:black;
+	color:#000;
 	text-align:center;	
 }
 .scal .dayboxvalue{
     display: none;
 }
 .scal .dayboxname{
-	background-color: black;
-	color:white;
+	background-color: #000;
+	color: #fff;
 	font-size:16pt;
 }
 .scal .dayboxsunday{
@@ -109,17 +108,17 @@ P.S. Try out the included versions to see how they work and have fun!
 	border:1px solid red;
 }
 .scal .dayboxname:hover{
-	border:1px solid black;
+	border:1px solid #000;
 }
 .scal .dayinmonth{
-	color: black;
+	color: #000;
 }
 .scal .dayoutmonth{
 	color:gray;
 }
 .scal .dayselected{
 	background-color: red;
-	color: white;
+	color: #fff;
 }
 .scal .daycurrent{
 	border:1px solid red;
@@ -227,13 +226,13 @@ iscal - based on apple's ical default design
 }
 .iscal .daybox{
 	float:left;
-	background-color: white;
+	background-color: #fff;
 	border-left:1px solid #cccccc;
 	border-bottom: 1px solid #cccccc;
 	width:70px;
 	height:70px;
 	padding:3px;
-	color:black;
+	color: #000;
 	text-align:right;
     overflow: auto;
 }
@@ -254,7 +253,7 @@ iscal - based on apple's ical default design
 .iscal .dayboxname:hover{
 }
 .iscal .dayinmonth{
-	color: black;
+	color: #000;
 }
 .iscal .dayoutmonth{
 	color:gray;
@@ -352,11 +351,11 @@ googleblue - inspired by google's default calendar widget on iGoogle
 }
 .googleblue .daybox{
 	float:left;
-	background-color: white;
-	border:1px solid white;
+	background-color: #fff;
+	border:1px solid #fff;
 	width:25px;
 	padding:2px;
-	color:black;
+	color:#000;
 	text-align:center;	
 }
 .googleblue .dayboxvalue{
@@ -365,7 +364,7 @@ googleblue - inspired by google's default calendar widget on iGoogle
 .googleblue .dayboxname{
 	border: 1px solid #c3d9ff;
 	background-color: #c3d9ff;
-	color:black;
+	color:#000;
 }
 .googleblue .dayboxsunday{
 	background-color: #e8eef7;
@@ -380,14 +379,14 @@ googleblue - inspired by google's default calendar widget on iGoogle
 .googleblue .dayboxname:hover{
 }
 .googleblue .dayinmonth{
-	color: black;
+	color: #000;
 }
 .googleblue .dayoutmonth{
 	color:gray;
 }
 .googleblue .dayselected{
 	background-color: #aaccee;
-	color: black;
+	color: #000;
 }
 .googleblue .daycurrent{
 	border:1px solid #e8eef7;

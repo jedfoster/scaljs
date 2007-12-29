@@ -36,13 +36,13 @@
                 day:4,
                 dayheadlength:3,
                 prevbutton: 'P',
-								nextbutton: 'N',
-								daypadding: true
+                nextbutton: 'N',
+                daypadding: true
     });  
 
 new Test.Unit.Runner({
   testScal: function() { with(this) {
-						$('samplecal').show();
+			$('samplecal').show();
             var Cal = new scal('samplecal',upd, options);
             assertInstanceOf(scal, Cal); 
             // init date test based on options
@@ -55,15 +55,15 @@ new Test.Unit.Runner({
             assertEqual(42,days.size());
             assertEqual('Sun,Mon,Tue,Wed,Thu,Fri,Sat', $('samplecal').select('.dayboxname').collect(function(h){ return h.innerHTML; }).toString());
             // make sure all day values are numeric
-						days.collect(function(h){ return h.innerHTML.strip(); }).each(function(val) {
-									assertMatch(/^\d+$/,val);
-									assertEqual(2, val.length);
+            days.collect(function(h){ return h.innerHTML.strip(); }).each(function(val) {
+                assertMatch(/^\d+$/,val);
+                assertEqual(2, val.length);
             });
             assertEqual('N', $('samplecal').select('.calnextmonth')[0].innerHTML);
             assertEqual('P', $('samplecal').select('.calprevmonth')[0].innerHTML);
-	    			assertEqual('Y', $('samplecal').select('.calclose')[0].innerHTML);
-	  }},
-	 testControls: function() { with(this) {
+            assertEqual('Y', $('samplecal').select('.calclose')[0].innerHTML);
+    }},
+    testControls: function() { with(this) {
             Event.simulateMouse($('samplecal').select('.calnextmonth')[0], 'click');
             assertEqual('June 2020', $('samplecal').select('.caltitle')[0].innerHTML);
             
@@ -79,23 +79,23 @@ new Test.Unit.Runner({
             Event.simulateMouse(prev, 'click'); // December
             assertEqual('December 2019', $('samplecal').select('.caltitle')[0].innerHTML);
             Event.simulateMouse($('samplecal').select('.calclose')[0], 'click');
-						assertNotVisible($('samplecal'));
-						$('samplecal').show();
-       }},
-	 testMethods: function() { with(this) {
+            assertNotVisible($('samplecal'));
+            $('samplecal').show();
+    }},
+    testMethods: function() { with(this) {
             options.month = 1; // january test (thx pug)
             options.year = 2007;
-						var Cal2 = new scal('samplecal2',upd,options);					
+            var Cal2 = new scal('samplecal2',upd,options);					
             assertInstanceOf(scal, Cal2); // multiple calendar test 
-						assertEqual('January 2007', $('samplecal2').select('.caltitle')[0].innerHTML);
-						Cal2.toggleCalendar();
-      			wait(100, function() {
-							assertNotVisible($('samplecal2'));
-							Cal2.toggleCalendar();
-			      });
-      			wait(100, function() {
-							assertVisible($('samplecal2'));
-			      });           	
+            assertEqual('January 2007', $('samplecal2').select('.caltitle')[0].innerHTML);
+            Cal2.toggleCalendar();
+            wait(100, function() {
+                assertNotVisible($('samplecal2'));
+                Cal2.toggleCalendar();
+            });
+            wait(100, function() {
+                assertVisible($('samplecal2'));
+            });	
             Cal2.destroy();
             assertEqual(0, $('samplecal2').descendants().size());
             var testYears = 2;   // change as needed         
@@ -108,72 +108,139 @@ new Test.Unit.Runner({
                         options.year = year;
                         var Cal2 = new scal('samplecal2',upd,options);
                         assertInstanceOf(scal, Cal2); // multiple calendar test 
-                        assertEqual(assertionString, $('samplecal2').select('.caltitle')[0].innerHTML);
+                        assertEqual(assertionString, $('samplecal2').select('.caltitle')[0].innerHTML, 'year run - mth:' + m + ' yr:' + year);
                         Cal2.destroy();
                         assertEqual(0, $('samplecal2').descendants().size());
                     });
             });            
             var Cal2 = new scal('samplecal2',upd,options);
+            var first = Cal2.getSelectedElement();
+            var firstToCompare = $('samplecal2').select('.dayselected')[0];
+            assertEqual(first.inspect(),firstToCompare.inspect());
             assertInstanceOf(scal, Cal2); // multiple calendar test
             Cal2.setCurrentDate(new Date('February 12, 2017'));
-            assertEqual(12, $('samplecal2').select('.dayselected')[0].down().innerHTML);
             assertEqual('February 2017', $('samplecal2').select('.caltitle')[0].innerHTML);
             Cal2.setCurrentDate('init');
-            assertEqual(4, $('samplecal2').select('.dayselected')[0].down().innerHTML);
             var lastY = testYears + 2007;
             assertEqual('December ' + lastY, $('samplecal2').select('.caltitle')[0].innerHTML);
             Cal2.setCurrentDate('monthdown');
-            assertEqual(4, $('samplecal2').select('.dayselected')[0].down().innerHTML);
             assertEqual('November ' + lastY, $('samplecal2').select('.caltitle')[0].innerHTML);
             Cal2.setCurrentDate('monthup');
             assertEqual('December ' + lastY, $('samplecal2').select('.caltitle')[0].innerHTML);
-            assertEqual(4, $('samplecal2').select('.dayselected')[0].down().innerHTML);
             Cal2.setCurrentDate('yeardown');
             lastY -= 1;
-            assertEqual(4, $('samplecal2').select('.dayselected')[0].down().innerHTML);
             assertEqual('December ' + lastY, $('samplecal2').select('.caltitle')[0].innerHTML);
             Cal2.setCurrentDate('yearup');
             lastY += 1;
             assertEqual('December ' + lastY, $('samplecal2').select('.caltitle')[0].innerHTML);
-            assertEqual(4, $('samplecal2').select('.dayselected')[0].down().innerHTML);
-            var first = Cal2.getElementByDate(new Date('November 29, 2009'));
-            var firstToCompare = $('samplecal2').select('.cal_day_0_0')[0];
+            first = Cal2.getElementByDate(new Date('December 9, 2009'));
+            firstToCompare = $('samplecal2').select('.cal_day_1_3')[0];
+            assertEqual(first.inspect(),firstToCompare.inspect());
+            first = Cal2.getElementByDate(new Date('December 24, 2009'));
+            firstToCompare = $('samplecal2').select('.cal_day_3_4')[0];
+            first = Cal2.getElementByDate(new Date('November 29, 2009'));
+            firstToCompare = $('samplecal2').select('.cal_day_0_0')[0];
             assertEqual(first.inspect(),firstToCompare.inspect());
             first = Cal2.getElementsByWeek(0);
             firstToCompare = $('samplecal2').select('.weekbox')[1].select('.daybox');
             assertEqual(first.inspect(),firstToCompare.inspect());
-            first = Cal2.getSelectedElement();
-            firstToCompare = $('samplecal2').select('.dayselected')[0];
-            assertEqual(first.inspect(),firstToCompare.inspect());
-            firstToCompare = new Date();
-            firstToCompare.setHours(0,0,0,0);
-            Cal2.setCurrentDate(firstToCompare);
-            first = Cal2.getDateByElement($('samplecal2').select('.dayselected')[0]);
-						assertEqual(first.toJSON(), firstToCompare.toJSON());
             Cal2.destroy();
             assertEqual(0, $('samplecal2').descendants().size())
-			}},  
-			testClasses: function() { with(this) {		
-          var Cal2 = new scal('samplecal2',upd,options);
-          assertInstanceOf(scal, Cal2); // multiple calendar tes
-    		  // test classnames
-					var eWeeks = $('samplecal2').select('.endweek');
-					assertNotEqual(eWeeks.size(), 0, 'Endweek check');
-          eWeeks.each(function(sat){
+    }},  
+    testClasses: function() { with(this) {		
+            var Cal2 = new scal('samplecal2',upd,options);
+            assertInstanceOf(scal, Cal2); // multiple calendar test
+            // test classnames
+            $R(0,5).each(function(wk){ 
+                var sat = $('samplecal2').select('.cal_day_' + wk + '_6')[0];
+                assert(sat);
+                assertEqual(true, sat.hasClassName('endweek'));
+            });
+            var eWeeks = $('samplecal2').select('.endweek');
+            assertNotEqual(eWeeks.size(), 0, 'Endweek check');
+            eWeeks.each(function(sat){
                 if(!sat.hasClassName('dayboxname')) {
                     assertEqual('Saturday', Cal2.getDateByElement(sat).format('dddd'));
                 }
-					});
-					sundays = $('samplecal2').select('.dayboxsunday');
-					assertNotEqual(sundays.size(), 0, 'Sunday check');
-          sundays.each(function(sun){
-                    assertEqual('Sunday', Cal2.getDateByElement(sun).format('dddd'));
-					});
-          
-        }}
-
-    
- 
+            });
+            var sundays = $('samplecal2').select('.dayboxsunday');
+            assertNotEqual(sundays.size(), 0, 'Sunday check');
+            sundays.each(function(sun){
+                assertEqual('Sunday', Cal2.getDateByElement(sun).format('dddd'));
+            });     
+            Cal2.destroy();
+            assertEqual(0, $('samplecal2').descendants().size())
+    }},
+    testNoOptions: function() { with(this) {
+            var Cal2 = new scal('samplecal2',upd);
+            assertInstanceOf(scal, Cal2);
+            Cal2.destroy();
+            assertEqual(0, $('samplecal2').descendants().size())
+    }},
+    testWeekDayStart: function() { with(this) {
+            var expectedDays = [
+                'Sun,Mon,Tue,Wed,Thu,Fri,Sat',
+                'Mon,Tue,Wed,Thu,Fri,Sat,Sun',
+                'Tue,Wed,Thu,Fri,Sat,Sun,Mon',
+                'Wed,Thu,Fri,Sat,Sun,Mon,Tue',
+                'Thu,Fri,Sat,Sun,Mon,Tue,Wed',
+                'Fri,Sat,Sun,Mon,Tue,Wed,Thu',
+                'Sat,Sun,Mon,Tue,Wed,Thu,Fri'
+            ];
+            $R(0,6).each(function(d){ 
+                options.weekdaystart = d;
+                var Cal2 = new scal('samplecal2',upd,options);
+                assertInstanceOf(scal, Cal2);
+                assertEqual(expectedDays[d], $('samplecal2').select('.dayboxname').collect(function(h){ return h.innerHTML; }).toString());
+                Cal2.destroy();
+                assertEqual(0, $('samplecal2').descendants().size());
+            });
+            Date.prototype.daynames.each(function(dn,i) { // String test
+                options.weekdaystart = dn;
+                var Cal2 = new scal('samplecal2',upd,options);
+                assertInstanceOf(scal, Cal2); 
+                assertEqual(expectedDays[i], $('samplecal2').select('.dayboxname').collect(function(h){ return h.innerHTML; }).toString());
+                Cal2.destroy();
+                assertEqual(0, $('samplecal2').descendants().size());                
+            });
+            options.weekdaystart = 'foobar'; // Bad string test
+            var Cal2 = new scal('samplecal2', upd,options);
+            assertInstanceOf(scal, Cal2); 
+            assertEqual(expectedDays[0], $('samplecal2').select('.dayboxname').collect(function(h){ return h.innerHTML; }).toString());
+            Cal2.destroy();
+            assertEqual(0, $('samplecal2').descendants().size());     
+    }},
+    testCalendarPerformance: function() { with(this) {
+            var iterationCount = 25;                                 
+            options.weekdaystart = 0;             
+            var Cal2 = new scal('samplecal2',upd,options);
+            assertInstanceOf(scal, Cal2); 
+            benchmark(function(){
+                Cal2.setCurrentDate('monthup');
+            },iterationCount, 'Month switch - up');
+            benchmark(function(){
+                Cal2.setCurrentDate('monthdown');
+            },iterationCount, 'Month switch - down');
+            benchmark(function(){
+                Cal2.setCurrentDate('yearup');
+            },iterationCount, 'Year switch - up');
+            benchmark(function(){
+                Cal2.setCurrentDate('yeardown');
+            },iterationCount, 'Year switch - down');
+            Cal2.destroy();
+            assertEqual(0, $('samplecal2').descendants().size());      
+            benchmark(function(){
+                Cal2 = new scal('samplecal2',upd,options);
+                Cal2.destroy();
+            },iterationCount, 'scal creation & destruction');
+            Cal2 = new scal('samplecal2',upd,options);
+            benchmark(function(){
+                Cal2._updateTitles();
+            }, 1000, 'scal update calcontrol titles');
+            benchmark(function(){
+                var d = Cal2.currentdate.format('mmmm yyyy');
+            }, 1000, 'Date Format');
+    }}
   });
 // ]]>
 </script>
