@@ -267,6 +267,7 @@ scal.prototype = {
     _switchCal: function(){
         var direction = arguments[1] ? arguments[1] : arguments[0];		
         var params = {f: 'setTime', p: this.startdate.getTime()};
+        var sday = this.currentdate.getDate();
         if(direction != 'init') {
             var d = this.currentdate[direction.include('month') ? 'getMonth' : 'getFullYear']();
             params = {f: direction.include('month') ? 'setMonth' : 'setYear', p: direction.include('up') ? d + 1 : d - 1};
@@ -277,6 +278,9 @@ scal.prototype = {
             if(!this.options.beforecalchange(toDate)) { return; }
         }
         this.currentdate[params.f](params.p);
+        if (this.currentdate.getDate() != sday){
+            this.currentdate.setDate(0);
+        }
         if(arguments[1]) { 
             var event = arguments[0];
             event.date = this.currentdate;
