@@ -1,31 +1,51 @@
 ﻿scal.addMethods({
 /*------------------------------- INTERNAL -------------------------------*/    
     _setupPlanner: function(planner) {
-        var splanner = {};
+        this.planner = {};		
+        this._eventIndex = {deleted: []};
         planner.each(function(plan) {
-            var planclass = plan.cls ? plan.cls : 'dayboxevent';
-            if(Object.isString(plan.period)) {
-                var planDate = new Date(plan.period);
-                splanner[planDate] = { cls: planclass, val: plan.label };
+            this._setPlanner(plan);	
+        }.bind(this));
+    },
+	_setPlanner: function(plan) {
+        var plannerPeriod = Object.isArray(plan.period) ? plan.period : (typeof plan.period) == 'object' ? [plan.period] : [new Date(plan.period)];		
+        plannerPeriod.each(function(planDate){
+            if(!this.planner[planDate]) { this.planner[planDate] = []; }		
+            if(Object.isString(plan.cls) && Object.isString(plan.label)){
+                this.planner[planDate].push({ cls: ['dayboxevent', plan.cls], val: plan.label });
+                this._updateEindex(plan.label, planDate);
             } else {
-                plan.period.each(function(d){
-                    splanner[d] = { cls: planclass, val: plan.label };
-                });
+                var cls = Object.isArray(plan.cls) ? plan.cls : [plan.cls];
+                var labels = Object.isArray(plan.label) ? plan.label : [plan.label];			
+                while(cls.size() > labels.size()) {
+                    labels.push(labels[0]);				
+                    } 
+                while(labels.size() > cls.size()) {			
+                    cls.push(cls[0]);	
+                }			
+                $A($R(0, cls.size() - 1)).each(function(v){			
+                    var label = labels.shift();
+                    this.planner[planDate].push({cls: ['dayboxevent', cls.shift()], val: label});
+                    this._updateEindex(label, planDate);
+                }.bind(this));			
             }
-        });
-        return splanner;            
+       }.bind(this));		
+    },
+    _updateEindex: function(val,dt) {
+        if(!this._eventIndex[val]) { this._eventIndex[val] = []; }
+        this._eventIndex[val].push(dt);
     },
     _updatePlanner: function(day, el) {
         if(this.planner[day]) {
-            var planclass = this.planner[day].cls ? this.planner[day].cls + ' dayboxevent' : 'dayboxevent';
-            this.planner[day].val.each(function(plan) {
-                el.insert(new Element('p',{'class': planclass}).update(plan));
+            this.planner[day].each(function(plan) {	
+                plan.cls.push('dayboxevent');
+                el.insert(new Element('p',{'class': plan.cls.join(' ') }).update(plan.val));
             });
         }
     },
-    _setPlanner: function(planclasses,planvalues,plannerdate) {
-        if(this.planner[plannerdate]) {
-    		this.planner[plannerdate].val.push(planvalues.join(','));
+    _setPlanner1: function(planclasses,planvalues,plannerdate) {
+        if(this.planner[plannerdate]) {    	
+            this.planner[plannerdate].val.push(planvalues.join(','));
             if(arguments[3] && (!this.planner[plannerdate].cls.include(arguments[3]))) {
                 this.planner[plannerdate].cls += ' ' + arguments[3];
             }
@@ -39,14 +59,24 @@
 /*------------------------------- PUBLIC -------------------------------*/        
     getDatesByEvent: function(evt) {
         var dates = [];
-        for (var d in this.planner) {
-            var eindex = this.planner[d].val.indexOf(evt);
-            if(eindex >= 0) { dates.push(new Date(d)); }
+        if(this._eventIndex[evt]){
+            this._eventIndex[evt].each(function(d){
+                this._eventIndex.deleted = this._eventIndex.deleted.without(d);
+                dates.push(d);
+            }.bind(this));
+            return dates;
         }
-        return dates;
+        return false;
     },
     getEventsByDate: function(d) {
-        return this.planner[d] ? this.planner[d].val : false;
+        var pevents = [];
+        if(this.planner[d]) {
+            this.planner[d].each(function(p){
+                pevents.push(p.val);
+            });
+            return pevents;
+        }
+        return false;
     },
     getCurrentEvents: function() {
         // determine if we want just the current month or everything in current calendar view
@@ -68,10 +98,14 @@
             var cellIndex = this._getCellIndexByDate(d);
             if(Object.isNumber(arguments[1])) {
                 var index = arguments[1];
-                this.planner[d].val = this.planner[d].val.without(index);
+                if(this.planner[d][index]){
+                    delete this._eventIndex[this.planner[d][index]['val']];
+                    this.planner[d].splice(index,1);
+                }
                 this.cells[cellIndex].select('.dayboxvalue p')[index].remove();
              } else {
-                delete this.planner[d]; 
+                delete this.planner[d];
+                this._eventIndex.deleted.push(d);
                 this.cells[cellIndex].select('.dayboxvalue').invoke('remove');
              }
         } else {
@@ -85,47 +119,48 @@
         return this.getElementsByWeek(week).collect(function(e){ return e.select('p.dayboxevent'); });
     },
     getSelectedEvents: function() {
-        return this.getSelectedElement().select('p.dayboxevent');
+        var selectedElement = this.getSelectedElement();
+        return Object.isUndefined(selectedElement) ? false : selectedElement.select('p.dayboxevent');
     },
     getTodaysEvents: function() {
         return this.getTodaysElement().select('p.dayboxevent');
     },
     updateDayValue: function(week,day,value){
-        var planclasses = 'dayboxevent';
-        if(arguments[3]) { planclasses += ' ' + arguments[3]; }
         var planvalues = Object.isArray(value) ? value : [value]; 
+        var planclasses = arguments[3] ? Object.isString(arguments[3]) ? [arguments[3]] : arguments[3] : [];
         week -= 1;
         day -= 1;
         this.dateRange.eachSlice(7, function(wk,i) {
             if(i == week) {
-                this._setPlanner(planclasses,planvalues,wk[day],arguments[3]);
+                this._setPlanner({period: wk[day], cls: planclasses.clone(), label: planvalues.clone()});
                 throw $break
             }
         }.bind(this));        
+        planclasses.push('dayboxevent');
         var cellvalue = '.cal_day_'+week+'_'+day+'_value';
         var el = this.element.select(cellvalue)[0];
         planvalues.each(function(val) {
-            el.insert(new Element('p',{'class': planclasses}).update(value));
+            el.insert(new Element('p',{'class': planclasses.join(' ')}).update(value));
         });
         return el;
     },
     setPlannerValue: function(year,month,day,value){
-        var planclasses = 'dayboxevent';
-        if(arguments[4]) { planclasses += ' ' + arguments[4]; }	
         var planvalues = Object.isArray(value) ? value : [value];
-        plannerdate = new Date();
+        var plannerdate = new Date();
         plannerdate.setHours(0,0,0,0);
         plannerdate.setYear(year);
         plannerdate.setMonth(month-1);
         plannerdate.setDate(day);
-        this._setPlanner(planclasses,planvalues,plannerdate,arguments[4]);
+        var planclasses = arguments[4] ? Object.isString(arguments[4]) ? [arguments[4]] : arguments[4] : [];
+        this._setPlanner({period: plannerdate, cls: planclasses.clone(), label: planvalues.clone()});
+        planclasses.push('dayboxevent');
         if(!this._compareMonthYear(this.currentdate,plannerdate)) {
             return; // return nothing if plannerdate isn't in the current month
         }
         var cellIndex = this._getCellIndexByDate(plannerdate);
         var el = this.cells[cellIndex].select('.dayboxvalue')[0];
         planvalues.each(function(val) {
-            el.insert(new Element('p',{'class': planclasses}).update(val));
+            el.insert(new Element('p',{'class': planclasses.join(' ')}).update(val));
         });
         return el;
     }

@@ -86,7 +86,7 @@ scal.prototype = {
         this.table = false;
         this.thead = false;
         this.selectedElement = false;
-        if(this.options.planner) { this.planner = this._setupPlanner(this.options.planner); }
+        if(this.options.planner) { this._setupPlanner(this.options.planner); }
         if(this.options.tabular) { 
             this.table = new Element('table',{'class': 'cal_table',border: 0,cellspacing: 0,cellpadding: 0});
             this.thead = new Element('thead');
@@ -168,6 +168,7 @@ scal.prototype = {
         this.dateRange = [];
         this.indicators = []; // holds values to determine if continued checking for custom classes is needed
         this.cells.each(function(cell,cellindex){
+            cell.v.innerHTML = '';
             var day = (cell.weeknumber === 0) && (cellindex === 0) ? firstdaycal : this.dateRange[cellindex - 1].succ();
             this.cellClasses = ['daybox', cell.cid, 'daybox' + day.daynames[day.getDay()].toLowerCase()];
             this.dateRange[cellindex] = day;
