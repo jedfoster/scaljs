@@ -168,7 +168,6 @@ scal.prototype = {
         this.dateRange = [];
         this.indicators = []; // holds values to determine if continued checking for custom classes is needed
         this.cells.each(function(cell,cellindex){
-            cell.v.innerHTML = '';
             var day = (cell.weeknumber === 0) && (cellindex === 0) ? firstdaycal : this.dateRange[cellindex - 1].succ();
             this.cellClasses = ['daybox', cell.cid, 'daybox' + day.daynames[day.getDay()].toLowerCase()];
             this.dateRange[cellindex] = day;

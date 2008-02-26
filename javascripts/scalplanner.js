@@ -36,6 +36,7 @@
         this._eventIndex[val].push(dt);
     },
     _updatePlanner: function(day, el) {
+        el.innerHTML = '';
         if(this.planner[day]) {
             this.planner[day].each(function(plan) {	
                 plan.cls.push('dayboxevent');
