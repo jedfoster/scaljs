@@ -44,16 +44,6 @@
             });
         }
     },
-    _setPlanner1: function(planclasses,planvalues,plannerdate) {
-        if(this.planner[plannerdate]) {    	
-            this.planner[plannerdate].val.push(planvalues.join(','));
-            if(arguments[3] && (!this.planner[plannerdate].cls.include(arguments[3]))) {
-                this.planner[plannerdate].cls += ' ' + arguments[3];
-            }
-        } else {
-            this.planner[plannerdate] = { cls: planclasses, val: planvalues };
-        }
-    },    
     _compareMonthYear: function(date1,date2) {
         return Object.isUndefined(['getMonth','getFullYear'].find(function(n){ return date1[n]() != date2[n](); }));
     },
