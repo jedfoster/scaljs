@@ -24,7 +24,7 @@
                     cls.push(cls[0]);	
                 }			
                 $A($R(0, cls.size() - 1)).each(function(v){			
-                    var label = labels.shift();
+                    var label = labels.size() > 1 ? labels.shift() : labels[0];
                     this.planner[planDate].push({cls: ['dayboxevent', cls.shift()], val: label});
                     this._updateEindex(label, planDate);
                 }.bind(this));			
