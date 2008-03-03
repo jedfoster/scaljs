@@ -145,7 +145,7 @@
         var planclasses = arguments[4] ? Object.isString(arguments[4]) ? [arguments[4]] : arguments[4] : [];
         this._setPlanner({period: plannerdate, cls: planclasses.clone(), label: planvalues.clone()});
         planclasses.push('dayboxevent');
-        if(!this._compareMonthYear(this.currentdate,plannerdate)) {
+        if(this.dateRange.first() > plannerdate || this.dateRange.last() < plannerdate){
             return; // return nothing if plannerdate isn't in the current month
         }
         var cellIndex = this._getCellIndexByDate(plannerdate);
