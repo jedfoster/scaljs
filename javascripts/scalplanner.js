@@ -44,9 +44,6 @@
             });
         }
     },
-    _compareMonthYear: function(date1,date2) {
-        return Object.isUndefined(['getMonth','getFullYear'].find(function(n){ return date1[n]() != date2[n](); }));
-    },
 /*------------------------------- PUBLIC -------------------------------*/        
     getDatesByEvent: function(evt) {
         var dates = [];
@@ -97,7 +94,7 @@
              } else {
                 delete this.planner[d];
                 this._eventIndex.deleted.push(d);
-                this.cells[cellIndex].select('.dayboxvalue').invoke('remove');
+                this.cells[cellIndex].select('.dayboxvalue p').invoke('remove');
              }
         } else {
             return false;
