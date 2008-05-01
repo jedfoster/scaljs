@@ -137,7 +137,7 @@
         var plannerdate = new Date();
         plannerdate.setHours(0,0,0,0);
         plannerdate.setYear(year);
-        plannerdate.setMonth(month-1);
+        plannerdate.setMonth(month-1,1);
         plannerdate.setDate(day);
         var planclasses = arguments[4] ? Object.isString(arguments[4]) ? [arguments[4]] : arguments[4] : [];
         this._setPlanner({period: plannerdate, cls: planclasses.clone(), label: planvalues.clone()});
