@@ -47,3 +47,19 @@ This is where I get into trouble. I keep adding methods as I play with the contr
 * startdate - The first date provided when the calendar was created.
 * updateelement - The id of the element that is updated by a click on the calendar.
 * planner - This property holds a reference to day cell values. See setPlannerValue for more information.
+
+
+## Requirements
+
+prototype (1.6.0_rc1), script.aculo.us (1.7.1b3)
+
+Current Version: v0.1_beta8
+
+* v0.1_beta8 - Performance enhancements, upgrade to prototype 1.6 and much more courtesy of Ian Tyndall! (Thanks, Ian!)
+* v0.1_beta7 - Added a new planner function to allow developers to "load up" days - see updatePlannerValue (thanks to Matt Hoffman for the idea). Fixed error in initialization that caused the control to set the default day to 1/1/YYYY.
+* v0.1_beta6 - Tightened up parameter setting per Prototype standards (Thanks, Kangax!).
+* v0.1_beta5 - Added weekdaystart parameter to allow for the week to start on different days.
+* v0.1_beta4 - More CSS tweaks for IE6. Addressed memory leaks related to orphaned calendar cells.
+* v0.1_beta3 - Allows use of a function reference for update_id. General performance improvements: observing fewer events, using a handle to clear selected flag from cells instead of iterating through the entire calendar (duh).
+* v0.1_beta2 - CSS cleanup.
+* v0.1_beta1 - release
